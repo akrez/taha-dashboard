@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\Permission;
+use App\Models\Role;
 use Spatie\Permission\DefaultTeamResolver;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 return [
+    'super_admin_role_name' => env('SUPER_ADMIN_ROLE_NAME'),
+
+    'super_admin_national_codes' => env('SUPER_ADMIN_NATIONAL_CODES'),
 
     'models' => [
 

@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Discipline;
+use App\Models\Position;
+use App\Models\Project;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<User>
@@ -25,21 +28,28 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'personnel_code' => fake()->unique()->numerify('##########'),
+            'national_code' => fake()->unique()->numerify('##########'),
+            'first_name' => fake()->randomElement(['حسن', 'رضا', 'علی', 'محمد', 'حسین', 'مهدی', 'سارا', 'زهرا', 'فاطمه', 'مریم']),
+            'last_name' => fake()->randomElement(['حسنی', 'رضایی', 'محمدی', 'حسینی', 'کریمی', 'موسوی', 'احمدی', 'صادقی']),
+            'father_name' => fake()->randomElement(['محسن', 'اکبر', 'اصغر', 'جعفر', 'قاسم', 'ناصر']),
+            'discipline_id' => Discipline::factory(),
+            'project_id' => Project::factory(),
+            'section_id' => Section::factory(),
+            'position_id' => Position::factory(),
+            'membership_type' => fake()->randomElement(['قراردادی', 'رسمی', 'پیمانی']),
+            'is_disable' => false,
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indicate that the user is disabled.
      */
-    public function unverified(): static
+    public function disabled(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'is_disable' => true,
         ]);
     }
 }
