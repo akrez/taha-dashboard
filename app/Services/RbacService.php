@@ -48,6 +48,17 @@ class RbacService
         $this->syncRolePermissions($role, $permissionNames);
     }
 
+    public function syncRoleUsers(Role $role, $users)
+    {
+        $role->users()->sync($users);
+    }
+
+    public function syncRoleUsersById(Role $role, $users)
+    {
+        $users = User::query()->whereIn('id', (array) ($users))->pluck('id')->all();
+        $this->syncRoleUsers($role, $users);
+    }
+
     public function syncUserPermissions(User $user, $permissions)
     {
         $user->syncPermissions($permissions);
@@ -130,5 +141,10 @@ class RbacService
         abort_unless($superAdminRole, 500, 'set SUPER_ADMIN_ROLE_NAME in env');
 
         return $superAdminRole;
+    }
+
+    public function isSuperAdminRoleName(string $name): bool
+    {
+        return strtolower($this->getSuperAdminRoleName()) == strtolower($name);
     }
 }
