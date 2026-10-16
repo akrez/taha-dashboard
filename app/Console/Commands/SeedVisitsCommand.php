@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class SeedVisitsCommand extends Command
 {
-    protected $signature = 'seed:visits {count? : Number of fake visits to create}';
+    protected $signature = 'app:seed-visits {count? : Number of fake visits to create}';
 
     protected $description = 'Generate fake visit records for testing';
 
