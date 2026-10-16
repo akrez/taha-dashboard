@@ -3,12 +3,21 @@
 namespace App\Services;
 
 use App\Models\Visit;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class VisitService
 {
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return Visit::query()
+            ->with('user:id,first_name,last_name,national_code')
+            ->latest('visited_at')
+            ->paginate($perPage);
+    }
+
     public function record(Request $request): void
     {
         $now = verta()->now();
