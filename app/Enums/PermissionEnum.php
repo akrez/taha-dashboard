@@ -8,4 +8,5 @@ enum PermissionEnum
 
     case VisitIndex;
     case Slide;
+    case Link;
 }

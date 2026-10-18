@@ -13,20 +13,9 @@ use Illuminate\Support\Arr;
 
 class SlideController extends Controller
 {
-    /**
-     * Visible slides, used by the home page carousel.
-     */
     public function index(SlideService $slides): JsonResponse
     {
-        return SlideResource::collection($slides->visible())->response();
-    }
-
-    /**
-     * Every slide, used by the management screen.
-     */
-    public function manage(SlideService $slides): JsonResponse
-    {
-        return SlideResource::collection($slides->all())->response();
+        return SlideResource::collection($slides->index())->response();
     }
 
     public function store(StoreSlideRequest $request, SlideService $slides): JsonResponse

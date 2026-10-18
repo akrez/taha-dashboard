@@ -15,9 +15,4 @@ class VisitController extends Controller
 
         return response()->json($visits->paginate($perPage));
     }
-
-    public function stats(VisitService $visits): JsonResponse
-    {
-        return response()->json($visits->stats());
-    }
 }

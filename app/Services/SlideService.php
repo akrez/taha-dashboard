@@ -26,7 +26,7 @@ class SlideService
     /**
      * Every slide, in display order, for the management screen.
      */
-    public function all(): Collection
+    public function index(): Collection
     {
         return Slide::query()
             ->with('file')
