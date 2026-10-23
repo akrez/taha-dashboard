@@ -39,3 +39,11 @@ export function RequirePermission({ permission, children }) {
 
     return children;
 }
+
+export function RequireAnyPermission({ permissions, children }) {
+    if (!permissions.some((permission) => can(permission))) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+}

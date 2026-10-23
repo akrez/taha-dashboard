@@ -1,11 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import DashboardIndex from './components/DashboardIndex';
-import { RequireAuth, RequirePermission, RequireSuperAdmin } from './components/Guards';
+import { RequireAnyPermission, RequireAuth, RequirePermission, RequireSuperAdmin } from './components/Guards';
 import HomeIndex from './components/HomeIndex';
 import LinksTable from './components/LinksTable';
 import RolesTable from './components/RolesTable';
 import SlidesTable from './components/SlidesTable';
 import VisitsTable from './components/VisitsTable';
+import UsersExcel from './components/UsersExcel';
 
 /**
  * Client-side routes for the dashboard shell. `HomeIndex` renders the app bar
@@ -44,6 +45,16 @@ export default function AppRoutes() {
                                 <RequirePermission permission="Link">
                                     <LinksTable />
                                 </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="users"
+                        element={
+                            <RequireAuth>
+                                <RequireAnyPermission permissions={['UserManager', 'UserIndex']}>
+                                    <UsersExcel />
+                                </RequireAnyPermission>
                             </RequireAuth>
                         }
                     />

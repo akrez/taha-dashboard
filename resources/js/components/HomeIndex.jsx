@@ -22,6 +22,7 @@ import {
     LogoutOutlined,
     Security as RolesIcon,
     Slideshow as SlideshowIcon,
+    People as UsersIcon,
     Visibility as VisibilityIcon,
 } from '@mui/icons-material';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -34,6 +35,7 @@ const navItems = [
     { key: 'visits', label: 'بازدیدها', path: '/visits', icon: <VisibilityIcon />, permission: 'VisitIndex' },
     { key: 'slides', label: 'اسلایدها', path: '/slides', icon: <SlideshowIcon />, permission: 'Slide' },
     { key: 'links', label: 'لینک‌ها', path: '/links', icon: <LinkIcon />, permission: 'Link' },
+    { key: 'users', label: 'کاربران', path: '/users', icon: <UsersIcon />, permissions: ['UserManager', 'UserIndex'] },
     { key: 'roles', label: 'نقش‌ها', path: '/roles', icon: <RolesIcon />, superAdmin: true },
 ];
 
@@ -74,6 +76,10 @@ export default function HomeIndex() {
         }
 
         if (item.role && !hasRole(item.role)) {
+            return false;
+        }
+
+        if (item.permissions && !item.permissions.some((permission) => can(permission))) {
             return false;
         }
 
