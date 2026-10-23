@@ -31,7 +31,7 @@ import { can, getUser, hasRole, isSuperAdmin, logout } from '../auth';
 import Footer from './Footer';
 
 const navItems = [
-    { key: 'dashboard', label: 'صفحه نخست پروژه طاها', path: '/', icon: <HomeIndexIcon /> },
+    { key: 'dashboard', label: 'پروژه طاها', path: '/', icon: <HomeIndexIcon /> },
     { key: 'visits', label: 'بازدیدها', path: '/visits', icon: <VisibilityIcon />, permission: 'VisitIndex' },
     { key: 'slides', label: 'اسلایدها', path: '/slides', icon: <SlideshowIcon />, permission: 'Slide' },
     { key: 'links', label: 'لینک‌ها', path: '/links', icon: <LinkIcon />, permission: 'Link' },

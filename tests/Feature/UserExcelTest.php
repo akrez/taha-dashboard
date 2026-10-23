@@ -262,15 +262,28 @@ class UserExcelTest extends TestCase
         $exportResponse = $this->actingAs($manager, 'api')->get('/api/users/export');
         $exportResponse->assertStatus(200);
 
-        // ۳. کاربر معمولی بدون نقش UserManager نباید دسترسی داشته باشد (403)
+        // ۳. تست لیست کاربران با دسترسی UserIndex
+        $indexResponse = $this->actingAs($manager, 'api')->getJson('/api/users?page=1&per_page=10');
+        $indexResponse->assertStatus(200);
+        $indexResponse->assertJsonStructure([
+            'current_page',
+            'data',
+            'total',
+            'per_page',
+        ]);
+
+        // ۴. کاربر معمولی بدون نقش UserIndex نباید دسترسی داشته باشد (403)
         $normalUser = User::create([
             'national_code' => '1111111112',
             'password' => 'password',
             'is_disable' => false,
         ]);
 
-        $unauthorizedResponse = $this->actingAs($normalUser, 'api')->get('/api/users/export');
-        $unauthorizedResponse->assertStatus(403);
+        $unauthorizedExportResponse = $this->actingAs($normalUser, 'api')->get('/api/users/export');
+        $unauthorizedExportResponse->assertStatus(403);
+
+        $unauthorizedIndexResponse = $this->actingAs($normalUser, 'api')->getJson('/api/users');
+        $unauthorizedIndexResponse->assertStatus(403);
     }
 
     public function test_export_and_reimport_preserves_exact_active_and_disabled_statuses()

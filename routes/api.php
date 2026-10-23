@@ -42,6 +42,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/users/import', [UserController::class, 'import']);
     });
     Route::middleware(['permission:'.PermissionEnum::UserIndex->name])->group(function () {
+        Route::get('/users', [UserController::class, 'index']);
         Route::get('/users/export', [UserController::class, 'export']);
     });
 });

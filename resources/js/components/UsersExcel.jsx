@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
     Alert,
@@ -14,14 +14,45 @@ import {
     DialogContent,
     DialogTitle,
     FormControlLabel,
+    IconButton,
+    InputAdornment,
     Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    TextField,
     Typography,
 } from '@mui/material';
 import {
+    Clear as ClearIcon,
     Download as DownloadIcon,
+    Search as SearchIcon,
     UploadFile as UploadIcon,
 } from '@mui/icons-material';
 import { can } from '../auth';
+
+const columns = [
+    { id: 'id', label: '#' },
+    { id: 'name', label: 'نام و نام خانوادگی' },
+    { id: 'national_code', label: 'کد ملی' },
+    { id: 'personnel_code', label: 'کد پرسنلی' },
+    { id: 'father_name', label: 'نام پدر' },
+    { id: 'discipline', label: 'دیسیپلین' },
+    { id: 'project', label: 'پروژه' },
+    { id: 'section', label: 'نام قسمت' },
+    { id: 'position', label: 'پست سازمانی' },
+    { id: 'membership_type', label: 'نوع عضویت' },
+    { id: 'status', label: 'وضعیت', align: 'center' },
+];
+
+function userName(user) {
+    const name = [user.first_name, user.last_name].filter(Boolean).join(' ');
+    return name || '—';
+}
 
 function apiErrors(error, fallback = 'خطایی رخ داد.') {
     const errors = error.response?.data?.errors;
@@ -70,6 +101,8 @@ function ErrorAlert({ messages, sx }) {
 export default function UsersExcel() {
     const canImport = can('UserManager');
     const canExport = can('UserIndex');
+    const canIndex = can('UserIndex');
+
     const [dialogOpen, setDialogOpen] = useState(false);
     const [file, setFile] = useState(null);
     const [deactivateMissing, setDeactivateMissing] = useState(false);
@@ -78,6 +111,53 @@ export default function UsersExcel() {
     const [error, setError] = useState([]);
     const [formError, setFormError] = useState([]);
     const [result, setResult] = useState(null);
+
+    // Users table state
+    const [users, setUsers] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [loadingUsers, setLoadingUsers] = useState(false);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const loadUsers = useCallback(async (targetPage, targetPerPage, query) => {
+        if (!canIndex) {
+            return;
+        }
+
+        setLoadingUsers(true);
+
+        try {
+            const params = {
+                page: targetPage + 1,
+                per_page: targetPerPage,
+            };
+
+            if (query && query.trim()) {
+                params.search = query.trim();
+            }
+
+            const response = await axios.get('/api/users', { params });
+            setUsers(response.data.data ?? []);
+            setTotal(response.data.total ?? 0);
+        } catch (err) {
+            setError(apiErrors(err, 'دریافت فهرست کاربران ناموفق بود.'));
+        } finally {
+            setLoadingUsers(false);
+        }
+    }, [canIndex]);
+
+    useEffect(() => {
+        if (!canIndex) {
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            loadUsers(page, rowsPerPage, searchTerm);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [canIndex, page, rowsPerPage, searchTerm, loadUsers]);
 
     const openDialog = () => {
         setFile(null);
@@ -135,6 +215,10 @@ export default function UsersExcel() {
             setResult(response.data.data);
             setError([]);
             setDialogOpen(false);
+
+            if (canIndex) {
+                loadUsers(page, rowsPerPage, searchTerm);
+            }
         } catch (err) {
             setFormError(apiErrors(err, 'ورود اطلاعات کاربران ناموفق بود.'));
         } finally {
@@ -145,9 +229,18 @@ export default function UsersExcel() {
     return (
         <Card>
             <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: { xs: 'flex-start', sm: 'center' },
+                        justifyContent: 'space-between',
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        gap: 2,
+                        mb: 2,
+                    }}
+                >
                     <Typography variant="h6">کاربران</Typography>
-                    <Stack direction="row" spacing={1} sx={{ ml: 'auto' }}>
+                    <Stack direction="row" spacing={1}>
                         {canExport && (
                             <Button
                                 variant="outlined"
@@ -186,16 +279,129 @@ export default function UsersExcel() {
                     </Alert>
                 )}
 
-                <Alert severity="info">
-                    <Typography variant="body2" component="div">
-                        <Box component="ul" sx={{ my: 0, pr: 2 }}>
-                            <li>برای دریافت قالب استاندارد، ابتدا از دکمه «خروجی Excel» استفاده کنید.</li>
-                            <li>کد ملی الزامی است و ارقام فارسی آن هنگام ورود به انگلیسی تبدیل می‌شوند.</li>
-                            <li>رمز خالی برای کاربران موجود بدون تغییر می‌ماند و برای کاربران جدید برابر کد ملی خواهد بود.</li>
-                            <li>روابط سازمانی جدید به‌صورت خودکار ایجاد می‌شوند.</li>
+                {canIndex && (
+                    <Box sx={{ mb: 2 }}>
+                        <Box sx={{ mb: 2, maxWidth: 360 }}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                placeholder="جستجو (نام، کد ملی، کد پرسنلی...)"
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setPage(0);
+                                }}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon fontSize="small" color="action" />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: searchTerm ? (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => {
+                                                        setSearchTerm('');
+                                                        setPage(0);
+                                                    }}
+                                                >
+                                                    <ClearIcon fontSize="small" />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ) : null,
+                                    },
+                                }}
+                            />
                         </Box>
-                    </Typography>
-                </Alert>
+
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        {columns.map((column) => (
+                                            <TableCell key={column.id} align={column.align ?? 'right'}>
+                                                {column.label}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {loadingUsers ? (
+                                        <TableRow>
+                                            <TableCell colSpan={columns.length} align="center">
+                                                <CircularProgress size={24} sx={{ my: 3 }} />
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        users.map((user, index) => (
+                                            <TableRow key={user.id} hover>
+                                                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                                                <TableCell>
+                                                    <Typography variant="body2" fontWeight={600}>
+                                                        {userName(user)}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell dir="ltr">{user.national_code || '—'}</TableCell>
+                                                <TableCell dir="ltr">{user.personnel_code || '—'}</TableCell>
+                                                <TableCell>{user.father_name || '—'}</TableCell>
+                                                <TableCell>{user.discipline?.name || '—'}</TableCell>
+                                                <TableCell>{user.project?.name || '—'}</TableCell>
+                                                <TableCell>{user.section?.name || '—'}</TableCell>
+                                                <TableCell>{user.position?.name || '—'}</TableCell>
+                                                <TableCell>{user.membership_type || '—'}</TableCell>
+                                                <TableCell align="center">
+                                                    <Chip
+                                                        size="small"
+                                                        label={user.is_disable ? 'غیرفعال' : 'فعال'}
+                                                        color={user.is_disable ? 'default' : 'success'}
+                                                        variant={user.is_disable ? 'outlined' : 'filled'}
+                                                    />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                    {!loadingUsers && users.length === 0 && (
+                                        <TableRow>
+                                            <TableCell colSpan={columns.length} align="center">
+                                                کاربری یافت نشد
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+
+                        <TablePagination
+                            component="div"
+                            count={total}
+                            page={page}
+                            onPageChange={(_event, newPage) => setPage(newPage)}
+                            rowsPerPage={rowsPerPage}
+                            onRowsPerPageChange={(event) => {
+                                setRowsPerPage(parseInt(event.target.value, 10));
+                                setPage(0);
+                            }}
+                            rowsPerPageOptions={[10, 25, 50, 100]}
+                            labelRowsPerPage="تعداد در صفحه"
+                            labelDisplayedRows={({ from, to, count }) => `${from}-${to} از ${count}`}
+                        />
+                    </Box>
+                )}
+
+                {canImport && (
+                    <Alert severity="info" sx={{ mt: 2 }}>
+                        <Typography variant="body2" component="div">
+                            <Box component="ul" sx={{ my: 0, pr: 2 }}>
+                                <li>برای دریافت قالب استاندارد، از دکمه «خروجی Excel» استفاده کنید.</li>
+                                <li>کد ملی الزامی است و ارقام فارسی آن هنگام ورود به انگلیسی تبدیل می‌شوند.</li>
+                                <li>رمز خالی برای کاربران موجود بدون تغییر می‌ماند و برای کاربران جدید برابر کد ملی خواهد بود.</li>
+                                <li>روابط سازمانی جدید به‌صورت خودکار ایجاد می‌شوند.</li>
+                            </Box>
+                        </Typography>
+                    </Alert>
+                )}
             </CardContent>
 
             <Dialog
