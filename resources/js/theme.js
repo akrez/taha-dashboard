@@ -21,7 +21,7 @@ const theme = createTheme({
         borderRadius: 8,
     },
     typography: {
-        fontFamily: '"Vazirmatn", system-ui, -apple-system, sans-serif',
+        fontFamily: '"Vazir", system-ui, -apple-system, sans-serif',
     },
     components: {
         MuiDialogContent: {

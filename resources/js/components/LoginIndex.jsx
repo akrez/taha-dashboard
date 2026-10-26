@@ -78,7 +78,7 @@ export default function LoginIndex() {
                 <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
                     <Stack spacing={1} alignItems="center" sx={{ mb: 4 }}>
                         <Typography variant="h5" fontWeight={700} color="primary.main">
-                            پروژه طاها
+                            مهندسین مشاور طرح آفرینان هزاره امید (طاها)
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             برای ادامه وارد حساب کاربری خود شوید

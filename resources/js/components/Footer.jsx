@@ -124,7 +124,7 @@ export default function Footer({ visits, authenticated = false }) {
                                 },
                             }}
                         >
-                            درباره موسسه
+                            درباره مهندسین مشاور 
                         </Typography>
 
                         <Typography

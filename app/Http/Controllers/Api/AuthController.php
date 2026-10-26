@@ -34,6 +34,8 @@ class AuthController extends Controller
             ]);
         }
 
+        $user->load(['position', 'project']);
+
         $token = $user->createToken('api')->plainTextToken;
 
         return response()->json([

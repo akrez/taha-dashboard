@@ -104,7 +104,7 @@ class VisitService
         }
 
         $result = ['labels' => [], 'data' => []];
-        for ($i = 30; $i >= 0; $i--) {
+        for ($i = 29; $i >= 0; $i--) {
             $time = $now->copy()->subDays($i);
             $result['labels'][] = $time->format('d');
             $key = $time->format('Ymd');

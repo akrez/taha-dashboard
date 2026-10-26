@@ -31,7 +31,7 @@ import { can, getUser, hasRole, isSuperAdmin, logout } from '../auth';
 import Footer from './Footer';
 
 const navItems = [
-    { key: 'dashboard', label: 'پروژه طاها', path: '/', icon: <HomeIndexIcon /> },
+    { key: 'dashboard', label: '', path: '/', icon: <HomeIndexIcon />, title: 'صفحه اصلی' },
     { key: 'visits', label: 'بازدیدها', path: '/visits', icon: <VisibilityIcon />, permission: 'VisitIndex' },
     { key: 'slides', label: 'اسلایدها', path: '/slides', icon: <SlideshowIcon />, permission: 'Slide' },
     { key: 'links', label: 'لینک‌ها', path: '/links', icon: <LinkIcon />, permission: 'Link' },
@@ -69,6 +69,7 @@ export default function HomeIndex() {
     };
 
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 'کاربر';
+    const userRoleInfo = [user?.position?.name, user?.project?.name].filter(Boolean).join(' - ');
 
     const visibleNavItems = navItems.filter((item) => {
         if (item.superAdmin && !isSuperAdmin()) {
@@ -133,9 +134,9 @@ export default function HomeIndex() {
                                 color="inherit"
                                 startIcon={item.icon}
                                 sx={{
-                                    minWidth: { xs: 40, sm: 64 },
-                                    px: { xs: 0.75, sm: 1.5 },
-                                    gap: 1,
+                                    minWidth: item.label ? { xs: 40, sm: 64 } : 40,
+                                    px: item.label ? { xs: 0.75, sm: 1.5 } : 1,
+                                    gap: item.label ? 1 : 0,
                                     '&.active': {
                                         bgcolor: (theme) => alpha(theme.palette.common.white, 0.18),
                                     },
@@ -144,9 +145,11 @@ export default function HomeIndex() {
                                     },
                                 }}
                             >
-                                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                                    {item.label}
-                                </Box>
+                                {item.label ? (
+                                    <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                                        {item.label}
+                                    </Box>
+                                ) : null}
                             </Button>
                         ))}
                     </Box>
@@ -154,11 +157,33 @@ export default function HomeIndex() {
                     <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
                         {user ? (
                             <>
-                                <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                                    {fullName}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: { xs: 'none', sm: 'flex' },
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-start',
+                                        textAlign: 'right',
+                                        lineHeight: 1.2,
+                                    }}
+                                >
+                                    <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                                        {fullName}
+                                    </Typography>
+                                    {userRoleInfo && (
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                opacity: 0.85,
+                                                fontSize: '0.73rem',
+                                                lineHeight: 1.2,
+                                            }}
+                                        >
+                                            {userRoleInfo}
+                                        </Typography>
+                                    )}
+                                </Box>
                                 <IconButton onClick={handleMenuOpen} size="small" sx={{ p: 0 }}>
-                                    <Avatar sx={{ width: 34, height: 34, bgcolor: 'secondary.main' }}>
+                                    <Avatar sx={{ width: 34, height: 34, bgcolor: 'secondary.main', fontSize: '0.95rem', fontWeight: 600 }}>
                                         {fullName.charAt(0)}
                                     </Avatar>
                                 </IconButton>
@@ -167,7 +192,23 @@ export default function HomeIndex() {
                                     open={Boolean(menuAnchor)}
                                     onClose={handleMenuClose}
                                 >
-                                    <MenuItem disabled>{fullName}</MenuItem>
+                                    <MenuItem disabled sx={{ opacity: '1 !important', py: 1 }}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
+                                            <Typography variant="subtitle2" fontWeight={700} color="text.primary">
+                                                {fullName}
+                                            </Typography>
+                                            {user?.position?.name && (
+                                                <Typography variant="caption" color="text.secondary">
+                                                    سمت: {user.position.name}
+                                                </Typography>
+                                            )}
+                                            {user?.project?.name && (
+                                                <Typography variant="caption" color="text.secondary">
+                                                    پروژه: {user.project.name}
+                                                </Typography>
+                                            )}
+                                        </Box>
+                                    </MenuItem>
                                     <Divider />
                                     <MenuItem onClick={handleLogout}>
                                         <ListItemIcon>
