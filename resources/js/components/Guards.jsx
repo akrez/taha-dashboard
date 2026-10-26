@@ -13,7 +13,7 @@ export function RequireAuth({ children }) {
     useEffect(() => {
         if (!authenticated) {
             const redirect = location.pathname + location.search;
-            window.location.replace(`/login?redirect=${encodeURIComponent(redirect)}`);
+            window.location.replace(`/?login=1&redirect=${encodeURIComponent(redirect)}`);
         }
     }, [authenticated, location.pathname, location.search]);
 

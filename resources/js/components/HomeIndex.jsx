@@ -25,10 +25,11 @@ import {
     People as UsersIcon,
     Visibility as VisibilityIcon,
 } from '@mui/icons-material';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { can, getUser, hasRole, isSuperAdmin, logout } from '../auth';
 import Footer from './Footer';
+import LoginModal from './LoginModal';
 
 const navItems = [
     { key: 'dashboard', label: '', path: '/', icon: <HomeIndexIcon />, title: 'صفحه اصلی' },
@@ -41,10 +42,46 @@ const navItems = [
 
 export default function HomeIndex() {
     const location = useLocation();
-    const [user] = useState(() => getUser());
+    const navigate = useNavigate();
+    const [user, setUser] = useState(() => getUser());
     const [menuAnchor, setMenuAnchor] = useState(null);
+    const [loginModalOpen, setLoginModalOpen] = useState(() => {
+        return new URLSearchParams(window.location.search).has('login');
+    });
     const [homeData, setHomeData] = useState(null);
     const [homeLoading, setHomeLoading] = useState(true);
+
+    // Listen for auth-required events triggered by guards or expired sessions
+    useEffect(() => {
+        const handleAuthRequired = () => setLoginModalOpen(true);
+        window.addEventListener('auth:login_required', handleAuthRequired);
+        return () => window.removeEventListener('auth:login_required', handleAuthRequired);
+    }, []);
+
+    const handleLoginClose = () => {
+        setLoginModalOpen(false);
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('login')) {
+            url.searchParams.delete('login');
+            window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+        }
+    };
+
+    const handleLoginSuccess = (newUser) => {
+        setUser(newUser);
+        setLoginModalOpen(false);
+
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        const url = new URL(window.location.href);
+        url.searchParams.delete('login');
+        url.searchParams.delete('redirect');
+        window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+
+        if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
+            navigate(redirect);
+        }
+    };
 
     // The whole public home payload (date, visit stats and visible slides) is
     // fetched once here and shared with the child route and the footer.
@@ -226,7 +263,21 @@ export default function HomeIndex() {
                                 </Menu>
                             </>
                         ) : (
-                            <Button color="inherit" component="a" href="/login" startIcon={<LoginIcon />}>
+                            <Button
+                                color="inherit"
+                                onClick={() => setLoginModalOpen(true)}
+                                startIcon={<LoginIcon />}
+                                sx={{
+                                    borderRadius: '6px',
+                                    px: 1.5,
+                                    py: 0.5,
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                        bgcolor: 'rgba(59, 130, 246, 0.2)',
+                                        color: '#93c5fd',
+                                    },
+                                }}
+                            >
                                 ورود
                             </Button>
                         )}
@@ -253,8 +304,18 @@ export default function HomeIndex() {
                 >
                     <Outlet context={{ visits, slides, links, loading: homeLoading }} />
                 </Box>
-                <Footer visits={visits} authenticated={Boolean(user)} />
+                <Footer
+                    visits={visits}
+                    authenticated={Boolean(user)}
+                    onOpenLogin={() => setLoginModalOpen(true)}
+                />
             </Box>
+
+            <LoginModal
+                open={loginModalOpen}
+                onClose={handleLoginClose}
+                onSuccess={handleLoginSuccess}
+            />
         </Box>
     );
 }

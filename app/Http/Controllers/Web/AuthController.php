@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): View
+    /**
+     * Redirect direct visits to /login to the SPA with the login modal triggered.
+     */
+    public function login(Request $request): RedirectResponse
     {
-        return view('auth.login');
+        $redirect = $request->query('redirect');
+        $query = $redirect ? '?login=1&redirect=' . urlencode($redirect) : '?login=1';
+
+        return redirect('/' . $query);
     }
 }

@@ -37,7 +37,7 @@ const authButtonSx = {
     },
 };
 
-export default function Footer({ visits, authenticated = false }) {
+export default function Footer({ visits, authenticated = false, onOpenLogin }) {
     // Visit stats arrive with the single home API payload.
     const visitTotal =
         visits?.currentYearTotal != null
@@ -297,8 +297,7 @@ export default function Footer({ visits, authenticated = false }) {
                             ) : (
                                 <Button
                                     variant="outlined"
-                                    component="a"
-                                    href="/login"
+                                    onClick={onOpenLogin}
                                     startIcon={<LoginIcon sx={{ transform: 'scaleX(-1)' }} />}
                                     sx={authButtonSx}
                                 >

@@ -86,9 +86,11 @@ export function redirectToLogin() {
 
     const { pathname, search } = window.location;
 
-    if (pathname !== '/login') {
+    if (pathname === '/') {
+        window.dispatchEvent(new CustomEvent('auth:login_required'));
+    } else {
         const redirect = encodeURIComponent(pathname + search);
-        window.location.href = `/login?redirect=${redirect}`;
+        window.location.href = `/?login=1&redirect=${redirect}`;
     }
 }
 
