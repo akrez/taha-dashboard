@@ -204,12 +204,12 @@ export default function HomeIndex() {
                                     sx={{
                                         display: { xs: 'none', sm: 'flex' },
                                         flexDirection: 'column',
-                                        alignItems: 'flex-start',
-                                        textAlign: 'right',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
                                         lineHeight: 1.2,
                                     }}
                                 >
-                                    <Typography variant="body2" fontWeight={600} lineHeight={1.2} sx={{ color: '#ffffff' }}>
+                                    <Typography variant="body2" fontWeight={600} lineHeight={1.2} sx={{ color: '#ffffff', textAlign: 'center' }}>
                                         {fullName}
                                     </Typography>
                                     {userRoleInfo && (
@@ -220,6 +220,7 @@ export default function HomeIndex() {
                                                 fontSize: '0.73rem',
                                                 lineHeight: 1.2,
                                                 fontWeight: 500,
+                                                textAlign: 'center',
                                             }}
                                         >
                                             {userRoleInfo}
@@ -236,19 +237,19 @@ export default function HomeIndex() {
                                     open={Boolean(menuAnchor)}
                                     onClose={handleMenuClose}
                                 >
-                                    <MenuItem disabled sx={{ opacity: '1 !important', py: 1 }}>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
-                                            <Typography variant="subtitle2" fontWeight={700} color="text.primary">
+                                    <MenuItem disabled sx={{ opacity: '1 !important', py: 1, justifyContent: 'center' }}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3, width: '100%', textAlign: 'center', alignItems: 'center' }}>
+                                            <Typography variant="subtitle2" fontWeight={700} color="text.primary" textAlign="center">
                                                 {fullName}
                                             </Typography>
                                             {user?.position?.name && (
-                                                <Typography variant="caption" color="text.secondary">
-                                                    سمت: {user.position.name}
+                                                <Typography variant="caption" color="text.secondary" textAlign="center">
+                                                    {user.position.name}
                                                 </Typography>
                                             )}
                                             {user?.project?.name && (
-                                                <Typography variant="caption" color="text.secondary">
-                                                    پروژه: {user.project.name}
+                                                <Typography variant="caption" color="text.secondary" textAlign="center">
+                                                    {user.project.name}
                                                 </Typography>
                                             )}
                                         </Box>
