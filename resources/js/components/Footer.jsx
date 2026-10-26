@@ -31,8 +31,8 @@ const authButtonSx = {
     transition: 'all 0.25s ease',
     '&:hover': {
         bgcolor: 'rgba(255, 255, 255, 0.22)',
-        borderColor: '#6ee7b7',
-        boxShadow: '0 4px 18px rgba(0, 0, 0, 0.25)',
+        borderColor: '#38bdf8',
+        boxShadow: '0 4px 18px rgba(37, 99, 235, 0.35)',
         transform: 'translateY(-2px)',
     },
 };
@@ -82,13 +82,13 @@ export default function Footer({ visits, authenticated = false }) {
                 width: '100%',
                 position: 'relative',
                 overflow: 'hidden',
-                // Gradient from dark green to lighter emerald green (as requested)
-                background: 'linear-gradient(90deg, #13694c 0%, #0a4f37 40%, #052c1e 75%, #021a12 100%)',
+                // Rich Blue-Black gradient with subtle blue glow
+                background: 'linear-gradient(90deg, #050814 0%, #0b152d 35%, #0d1935 65%, #040711 100%)',
                 color: '#ffffff',
                 pt: { xs: 5, md: 6 },
                 pb: 2.5,
-                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.15)',
+                borderTop: '1px solid rgba(59, 130, 246, 0.25)',
+                boxShadow: '0 -4px 25px rgba(3, 7, 18, 0.6)',
             }}
         >
             <Container maxWidth="xl" sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>
@@ -120,11 +120,11 @@ export default function Footer({ visits, authenticated = false }) {
                                     width: 32,
                                     height: 3,
                                     borderRadius: 2,
-                                    bgcolor: '#34d399',
+                                    bgcolor: '#38bdf8',
                                 },
                             }}
                         >
-                            درباره مهندسین مشاور 
+                            درباره مهندسین مشاور
                         </Typography>
 
                         <Typography
@@ -137,11 +137,7 @@ export default function Footer({ visits, authenticated = false }) {
                                 fontWeight: 400,
                             }}
                         >
-                            فعالیت خود را بصورت حرفه‌ای در زمینه‌های : 
-                            تونل انتقال آب ، سد ، نیروگاه و فضاهای زیر زمینی ، تونل های جاده ای
-                            درون شهری و برون شهری ، ابنیه و عملیات سویل (ساختمان اداری ، پارکینگ ،
-                            موج شکن) ، تونل و ایستگاه های مترو و راه آهن آغاز و به عنوان موفق ترین
-                            موسسه اجرایی در سطح کشور شناخته شده است.
+                            خدمات مهندسی جهت مطالعه، طراحی، نظارت فنی بر عملیات اجرایی در زمینه: انجام طرح های مهندسی آب شامل سدسازی، تاسیسات آب و فاضلاب، شبکه های آبیاری و زهکش ،خطوط انتقال و تصویه خانه آب 2 نقشه برداری شامل: نقشه برداری زمینی، هیدروگرافی، فتوگرامتری و میکروژیودزی 3 سدسازی و نیروگاه های برق آبی4 پایدارسازی سازه ها و تاسیسات زیربنایی در برابر زلزله و علاج بخشی سازه ها 5 تولید و توزیع و انتقال نیرو 6 خطوط انتقال نفت و گاز 7 مطالعات زیست محیطی
                         </Typography>
                     </Box>
 
@@ -165,7 +161,7 @@ export default function Footer({ visits, authenticated = false }) {
                                     width: 32,
                                     height: 3,
                                     borderRadius: 2,
-                                    bgcolor: '#34d399',
+                                    bgcolor: '#38bdf8',
                                 },
                             }}
                         >
@@ -187,15 +183,15 @@ export default function Footer({ visits, authenticated = false }) {
                                         transition: 'all 0.2s ease',
                                         '&:hover': item.href
                                             ? {
-                                                  color: '#a7f3d0',
-                                                  transform: 'translateX(-3px)',
-                                              }
+                                                color: '#93c5fd',
+                                                transform: 'translateX(-3px)',
+                                            }
                                             : {},
                                     }}
                                 >
                                     <Box
                                         sx={{
-                                            color: '#6ee7b7',
+                                            color: '#60a5fa',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -248,7 +244,7 @@ export default function Footer({ visits, authenticated = false }) {
                                         width: 32,
                                         height: 3,
                                         borderRadius: 2,
-                                        bgcolor: '#34d399',
+                                        bgcolor: '#38bdf8',
                                     },
                                 }}
                             >
@@ -268,7 +264,7 @@ export default function Footer({ visits, authenticated = false }) {
                                         component="span"
                                         sx={{
                                             fontWeight: 700,
-                                            color: '#6ee7b7',
+                                            color: '#38bdf8',
                                             display: 'inline-block',
                                         }}
                                     >
@@ -318,7 +314,7 @@ export default function Footer({ visits, authenticated = false }) {
                     sx={{
                         mt: { xs: 4, md: 5 },
                         pt: 2.5,
-                        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderTop: '1px solid rgba(59, 130, 246, 0.2)',
                         textAlign: 'center',
                     }}
                 >

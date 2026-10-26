@@ -5,15 +5,19 @@ const theme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#1a237e',
-            light: '#534bae',
-            dark: '#000051',
+            main: '#0a1128',
+            light: '#1c2d5a',
+            dark: '#040711',
+            contrastText: '#ffffff',
         },
         secondary: {
-            main: '#0d47a1',
+            main: '#2563eb',
+            light: '#3b82f6',
+            dark: '#1d4ed8',
+            contrastText: '#ffffff',
         },
         background: {
-            default: '#f4f6f8',
+            default: '#f1f5f9',
             paper: '#ffffff',
         },
     },
@@ -24,6 +28,15 @@ const theme = createTheme({
         fontFamily: '"Vazir", system-ui, -apple-system, sans-serif',
     },
     components: {
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    background: 'linear-gradient(90deg, #050814 0%, #0c162f 40%, #0d1935 70%, #050814 100%)',
+                    borderBottom: '1px solid rgba(59, 130, 246, 0.22)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
+                },
+            },
+        },
         MuiDialogContent: {
             styleOverrides: {
                 root: {

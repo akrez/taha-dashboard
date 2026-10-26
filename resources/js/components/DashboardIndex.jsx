@@ -148,11 +148,12 @@ export default function DashboardIndex() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: { xs: 0.5, sm: 1 },
-                        bgcolor: 'primary.main',
-                        color: 'primary.contrastText',
+                        background: 'linear-gradient(90deg, #060a14 0%, #0d1730 50%, #060a14 100%)',
+                        borderBottom: '1px solid rgba(59, 130, 246, 0.18)',
+                        color: '#ffffff',
                         px: { xs: 1, sm: 3 },
                         py: 0.75,
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
                     }}
                 >
                     {topLinks.map((link) => (
@@ -169,10 +170,10 @@ export default function DashboardIndex() {
                                 fontSize: 18,
                                 fontWeight: 600,
                                 textTransform: 'none',
-                                transition: 'background-color 150ms ease',
+                                transition: 'all 150ms ease',
                                 '&:hover': {
-                                    bgcolor: (theme) =>
-                                        alpha(theme.palette.common.white, 0.18),
+                                    bgcolor: 'rgba(59, 130, 246, 0.2)',
+                                    color: '#93c5fd',
                                 },
                             }}
                         >
@@ -202,21 +203,21 @@ export default function DashboardIndex() {
                     subtitle="۲۴ ساعت اخیر"
                     labels={(visits?.hourlyChart.labels ?? []).map((h) => `${Number(h)}:00`)}
                     data={visits?.hourlyChart.data ?? []}
-                    color="#1a237e"
+                    color="#1d4ed8"
                 />
                 <VisitChart
                     title="بازدید روزانه"
                     subtitle="۳۰ روز اخیر"
                     labels={(visits?.dailyChart.labels ?? []).map((d) => `روز ${Number(d)}`)}
                     data={visits?.dailyChart.data ?? []}
-                    color="#3949ab"
+                    color="#2563eb"
                 />
                 <VisitChart
                     title="بازدید ماهانه"
                     subtitle="۱۲ ماه اخیر"
                     labels={(visits?.monthlyChart.labels ?? []).map((m) => faMonths[Number(m) - 1] ?? m)}
                     data={visits?.monthlyChart.data ?? []}
-                    color="#00acc1"
+                    color="#0284c7"
                 />
             </Box>
 

@@ -103,10 +103,10 @@ export default function HomeIndex() {
                                     textAlign: 'center',
                                 }}
                             >
-                                <Typography variant="subtitle1" fontWeight={700} lineHeight={1.3}>
+                                <Typography variant="subtitle1" fontWeight={700} lineHeight={1.3} sx={{ color: '#ffffff' }}>
                                     {today.jalali}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" lineHeight={1.3}>
+                                <Typography variant="caption" lineHeight={1.3} sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                                     {today.gregorian}
                                 </Typography>
                             </Box>
@@ -137,8 +137,14 @@ export default function HomeIndex() {
                                     minWidth: item.label ? { xs: 40, sm: 64 } : 40,
                                     px: item.label ? { xs: 0.75, sm: 1.5 } : 1,
                                     gap: item.label ? 1 : 0,
+                                    transition: 'all 0.2s ease',
                                     '&.active': {
-                                        bgcolor: (theme) => alpha(theme.palette.common.white, 0.18),
+                                        bgcolor: 'rgba(59, 130, 246, 0.22)',
+                                        color: '#93c5fd',
+                                        boxShadow: 'inset 0 -2px 0 #3b82f6',
+                                    },
+                                    '&:hover': {
+                                        bgcolor: 'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiButton-startIcon': {
                                         m: 0,
@@ -166,16 +172,17 @@ export default function HomeIndex() {
                                         lineHeight: 1.2,
                                     }}
                                 >
-                                    <Typography variant="body2" fontWeight={600} lineHeight={1.2}>
+                                    <Typography variant="body2" fontWeight={600} lineHeight={1.2} sx={{ color: '#ffffff' }}>
                                         {fullName}
                                     </Typography>
                                     {userRoleInfo && (
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                opacity: 0.85,
+                                                color: '#93c5fd',
                                                 fontSize: '0.73rem',
                                                 lineHeight: 1.2,
+                                                fontWeight: 500,
                                             }}
                                         >
                                             {userRoleInfo}
