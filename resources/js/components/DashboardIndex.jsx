@@ -298,149 +298,11 @@ export default function DashboardIndex() {
 
             <SlidesCarousel slides={slides} />
 
-            {/* عنوان بخش آمار واقعی بازدیدها */}
-            <Box
-                sx={{
-                    px: { xs: 2, sm: 3 },
-                    mt: 3.5,
-                    mb: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: 1.5,
-                }}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
-                    <Box
-                        sx={{
-                            width: 4,
-                            height: 24,
-                            borderRadius: 2,
-                            bgcolor: '#1d4ed8',
-                        }}
-                    />
-                    <Typography variant="h6" fontWeight={700} sx={{ color: '#0a1128', fontSize: '1.15rem' }}>
-                        پایش زنده ترافیک و مراجعات به سامانه
-                    </Typography>
-                </Box>
-                <Chip
-                    icon={<LiveDotIcon sx={{ fontSize: '12px !important', color: '#22c55e !important' }} />}
-                    label="آمار برخط و لحظه‌ای (داده‌های واقعی سرور)"
-                    size="small"
-                    sx={{
-                        bgcolor: 'rgba(34, 197, 94, 0.1)',
-                        color: '#15803d',
-                        fontWeight: 600,
-                        fontSize: '0.74rem',
-                        border: '1px solid rgba(34, 197, 94, 0.25)',
-                    }}
-                />
-            </Box>
-
-            {/* ۳ نمودار واقعی بالا با طراحی مدرن و شکیل */}
-            <Box
-                sx={{
-                    display: 'grid',
-                    gap: 2.5,
-                    px: { xs: 2, sm: 3 },
-                    mb: 2,
-                    gridTemplateColumns: {
-                        xs: '1fr',
-                        md: 'repeat(3, minmax(0, 1fr))',
-                    },
-                }}
-            >
-                {/* نمودار واقعی ۱: بازدید ساعتی ۲۴ ساعت اخیر */}
-                <PremiumCard
-                    title="پایش ساعتی مراجعات"
-                    subtitle="ترافیک کاربران در ۲۴ ساعت گذشته"
-                    icon={<AccessTimeIcon fontSize="small" />}
-                    badge="۲۴ ساعت گذشته"
-                    kpiLabel="مجموع ۲۴ ساعت"
-                    kpiTotal={Number(totalHourly).toLocaleString('fa-IR')}
-                    kpiCurrentLabel="ساعت جاری"
-                    kpiCurrent={Number(currentHour).toLocaleString('fa-IR')}
-                    gradient="linear-gradient(90deg, #0a1128 0%, #1d4ed8 100%)"
-                >
-                    <Box sx={{ width: '100%', height: 230 }}>
-                        <BarChart
-                            xAxis={[{ scaleType: 'band', data: hourlyLabels.length ? hourlyLabels : ['۰۰:۰۰'] }]}
-                            series={[
-                                {
-                                    data: hourlyData.length ? hourlyData : [0],
-                                    label: 'تعداد بازدید',
-                                    color: '#1d4ed8',
-                                },
-                            ]}
-                            height={220}
-                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
-                        />
-                    </Box>
-                </PremiumCard>
-
-                {/* نمودار واقعی ۲: بازدید روزانه ۳۰ روز اخیر */}
-                <PremiumCard
-                    title="توزیع تردد ۳۰ روز اخیر"
-                    subtitle="روند فعالیت کاربران در روزهای ماه"
-                    icon={<CalendarTodayIcon fontSize="small" />}
-                    badge="۳۰ روز گذشته"
-                    kpiLabel="مجموع ۳۰ روز"
-                    kpiTotal={Number(totalDaily).toLocaleString('fa-IR')}
-                    kpiCurrentLabel="امروز"
-                    kpiCurrent={Number(currentDay).toLocaleString('fa-IR')}
-                    gradient="linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%)"
-                >
-                    <Box sx={{ width: '100%', height: 230 }}>
-                        <BarChart
-                            xAxis={[{ scaleType: 'band', data: dailyLabels.length ? dailyLabels : ['روز ۱'] }]}
-                            series={[
-                                {
-                                    data: dailyData.length ? dailyData : [0],
-                                    label: 'بازدید روزانه',
-                                    color: '#2563eb',
-                                },
-                            ]}
-                            height={220}
-                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
-                        />
-                    </Box>
-                </PremiumCard>
-
-                {/* نمودار واقعی ۳: عملکرد ماهانه ۱۲ ماه سال جاری */}
-                <PremiumCard
-                    title="روند بازدیدهای ماهانه"
-                    subtitle="ترافیک تجمعی در ۱۲ ماه سال جاری"
-                    icon={<InsightsIcon fontSize="small" />}
-                    badge="سال جاری"
-                    kpiLabel="کل سال"
-                    kpiTotal={Number(currentYear).toLocaleString('fa-IR')}
-                    kpiCurrentLabel="ماه جاری"
-                    kpiCurrent={Number(currentMonth).toLocaleString('fa-IR')}
-                    gradient="linear-gradient(90deg, #2563eb 0%, #0284c7 100%)"
-                >
-                    <Box sx={{ width: '100%', height: 230 }}>
-                        <BarChart
-                            xAxis={[{ scaleType: 'band', data: monthlyLabels.length ? monthlyLabels : ['فروردین'] }]}
-                            series={[
-                                {
-                                    data: monthlyData.length ? monthlyData : [0],
-                                    label: 'بازدید ماهانه',
-                                    color: '#0284c7',
-                                },
-                            ]}
-                            height={220}
-                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
-                        />
-                    </Box>
-                </PremiumCard>
-            </Box>
-
             {/* عنوان بخش داشبورد مدیریتی و شاخص‌های کلیدی عملکرد (۶ نمودار ارائه) */}
             <Box
                 sx={{
                     px: { xs: 2, sm: 3 },
-                    mt: 4,
+                    mt: 3.5,
                     mb: 2.5,
                     display: 'flex',
                     alignItems: 'center',
@@ -668,6 +530,144 @@ export default function DashboardIndex() {
                             ]}
                             height={270}
                             margin={{ top: 25, bottom: 35, left: 40, right: 15 }}
+                        />
+                    </Box>
+                </PremiumCard>
+            </Box>
+
+            {/* عنوان بخش آمار واقعی بازدیدها */}
+            <Box
+                sx={{
+                    px: { xs: 2, sm: 3 },
+                    mt: 4,
+                    mb: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: 1.5,
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+                    <Box
+                        sx={{
+                            width: 4,
+                            height: 24,
+                            borderRadius: 2,
+                            bgcolor: '#1d4ed8',
+                        }}
+                    />
+                    <Typography variant="h6" fontWeight={700} sx={{ color: '#0a1128', fontSize: '1.15rem' }}>
+                        پایش زنده ترافیک و مراجعات به سامانه
+                    </Typography>
+                </Box>
+                <Chip
+                    icon={<LiveDotIcon sx={{ fontSize: '12px !important', color: '#22c55e !important' }} />}
+                    label="آمار برخط و لحظه‌ای (داده‌های واقعی سرور)"
+                    size="small"
+                    sx={{
+                        bgcolor: 'rgba(34, 197, 94, 0.1)',
+                        color: '#15803d',
+                        fontWeight: 600,
+                        fontSize: '0.74rem',
+                        border: '1px solid rgba(34, 197, 94, 0.25)',
+                    }}
+                />
+            </Box>
+
+            {/* ۳ نمودار واقعی بالا با طراحی مدرن و شکیل */}
+            <Box
+                sx={{
+                    display: 'grid',
+                    gap: 2.5,
+                    px: { xs: 2, sm: 3 },
+                    mb: 4,
+                    gridTemplateColumns: {
+                        xs: '1fr',
+                        md: 'repeat(3, minmax(0, 1fr))',
+                    },
+                }}
+            >
+                {/* نمودار واقعی ۱: بازدید ساعتی ۲۴ ساعت اخیر */}
+                <PremiumCard
+                    title="پایش ساعتی مراجعات"
+                    subtitle="ترافیک کاربران در ۲۴ ساعت گذشته"
+                    icon={<AccessTimeIcon fontSize="small" />}
+                    badge="۲۴ ساعت گذشته"
+                    kpiLabel="مجموع ۲۴ ساعت"
+                    kpiTotal={Number(totalHourly).toLocaleString('fa-IR')}
+                    kpiCurrentLabel="ساعت جاری"
+                    kpiCurrent={Number(currentHour).toLocaleString('fa-IR')}
+                    gradient="linear-gradient(90deg, #0a1128 0%, #1d4ed8 100%)"
+                >
+                    <Box sx={{ width: '100%', height: 230 }}>
+                        <BarChart
+                            xAxis={[{ scaleType: 'band', data: hourlyLabels.length ? hourlyLabels : ['۰۰:۰۰'] }]}
+                            series={[
+                                {
+                                    data: hourlyData.length ? hourlyData : [0],
+                                    label: 'تعداد بازدید',
+                                    color: '#1d4ed8',
+                                },
+                            ]}
+                            height={220}
+                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
+                        />
+                    </Box>
+                </PremiumCard>
+
+                {/* نمودار واقعی ۲: بازدید روزانه ۳۰ روز اخیر */}
+                <PremiumCard
+                    title="توزیع تردد ۳۰ روز اخیر"
+                    subtitle="روند فعالیت کاربران در روزهای ماه"
+                    icon={<CalendarTodayIcon fontSize="small" />}
+                    badge="۳۰ روز گذشته"
+                    kpiLabel="مجموع ۳۰ روز"
+                    kpiTotal={Number(totalDaily).toLocaleString('fa-IR')}
+                    kpiCurrentLabel="امروز"
+                    kpiCurrent={Number(currentDay).toLocaleString('fa-IR')}
+                    gradient="linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%)"
+                >
+                    <Box sx={{ width: '100%', height: 230 }}>
+                        <BarChart
+                            xAxis={[{ scaleType: 'band', data: dailyLabels.length ? dailyLabels : ['روز ۱'] }]}
+                            series={[
+                                {
+                                    data: dailyData.length ? dailyData : [0],
+                                    label: 'بازدید روزانه',
+                                    color: '#2563eb',
+                                },
+                            ]}
+                            height={220}
+                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
+                        />
+                    </Box>
+                </PremiumCard>
+
+                {/* نمودار واقعی ۳: عملکرد ماهانه ۱۲ ماه سال جاری */}
+                <PremiumCard
+                    title="روند بازدیدهای ماهانه"
+                    subtitle="ترافیک تجمعی در ۱۲ ماه سال جاری"
+                    icon={<InsightsIcon fontSize="small" />}
+                    badge="سال جاری"
+                    kpiLabel="کل سال"
+                    kpiTotal={Number(currentYear).toLocaleString('fa-IR')}
+                    kpiCurrentLabel="ماه جاری"
+                    kpiCurrent={Number(currentMonth).toLocaleString('fa-IR')}
+                    gradient="linear-gradient(90deg, #2563eb 0%, #0284c7 100%)"
+                >
+                    <Box sx={{ width: '100%', height: 230 }}>
+                        <BarChart
+                            xAxis={[{ scaleType: 'band', data: monthlyLabels.length ? monthlyLabels : ['فروردین'] }]}
+                            series={[
+                                {
+                                    data: monthlyData.length ? monthlyData : [0],
+                                    label: 'بازدید ماهانه',
+                                    color: '#0284c7',
+                                },
+                            ]}
+                            height={220}
+                            margin={{ top: 20, bottom: 30, left: 35, right: 10 }}
                         />
                     </Box>
                 </PremiumCard>
