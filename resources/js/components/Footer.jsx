@@ -8,8 +8,6 @@ import {
     HomeWork as HomeWorkIcon,
     Mail as MailIcon,
     Phone as PhoneIcon,
-    AlternateEmail as AlternateEmailIcon,
-    Print as PrintIcon,
     Login as LoginIcon,
     LogoutOutlined,
 } from '@mui/icons-material';
@@ -47,30 +45,18 @@ export default function Footer({ visits, authenticated = false, onOpenLogin }) {
     const contactItems = [
         {
             icon: <HomeWorkIcon sx={{ fontSize: 20 }} />,
-            text: 'تهران ، بزرگراه بسیج ، بلوار شهیدان سرباز ، ضلع جنوبی ورزشگاه تختی ، خیابان شهید تجاره ، ...',
+            text: 'تهران، خیابان ولیعصر (عج)، خیابان ناهید غربی، کوچه اختران، ساختمان الماس، پلاک ۵۷',
             multiline: true,
         },
         {
-            icon: <MailIcon sx={{ fontSize: 20 }} />,
-            text: '۱۷۵۵۸-۱۳۳۱۱',
-            isLtr: false,
-        },
-        {
             icon: <PhoneIcon sx={{ fontSize: 20 }} />,
-            text: '۰۲۱-۳۳۲۳۰۵۰۰',
-            href: 'tel:02133230500',
+            text: '۰۲۱-۷۱۴۰۰۸۳۶',
+            href: 'tel:02171400836',
             isLtr: false,
         },
         {
-            icon: <AlternateEmailIcon sx={{ fontSize: 20 }} />,
-            text: 'hara@shrud.ir',
-            href: 'mailto:hara@shrud.ir',
-            isLtr: true,
-        },
-        {
-            icon: <PrintIcon sx={{ fontSize: 20 }} />,
-            text: '۰۲۱-۳۳۲۳۰۵۳۷',
-            href: 'tel:02133230537',
+            icon: <MailIcon sx={{ fontSize: 20 }} />,
+            text: 'کد پستی: ۱۹۶۷۷۷۳۳۱۴',
             isLtr: false,
         },
     ];
