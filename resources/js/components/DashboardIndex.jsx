@@ -363,15 +363,13 @@ export default function DashboardIndex() {
                     gradient="linear-gradient(90deg, #0a1128 0%, #1d4ed8 100%)"
                 >
                     <Box sx={{ width: '100%', height: 230 }}>
-                        <LineChart
-                            xAxis={[{ scaleType: 'point', data: hourlyLabels.length ? hourlyLabels : ['۰۰:۰۰'] }]}
+                        <BarChart
+                            xAxis={[{ scaleType: 'band', data: hourlyLabels.length ? hourlyLabels : ['۰۰:۰۰'] }]}
                             series={[
                                 {
                                     data: hourlyData.length ? hourlyData : [0],
                                     label: 'تعداد بازدید',
                                     color: '#1d4ed8',
-                                    area: true,
-                                    curve: 'natural',
                                 },
                             ]}
                             height={220}
@@ -413,7 +411,7 @@ export default function DashboardIndex() {
                     title="روند بازدیدهای ماهانه"
                     subtitle="ترافیک تجمعی در ۱۲ ماه سال جاری"
                     icon={<InsightsIcon fontSize="small" />}
-                    badge="سال ۱۴۰۴"
+                    badge="سال جاری"
                     kpiLabel="کل سال"
                     kpiTotal={Number(currentYear).toLocaleString('fa-IR')}
                     kpiCurrentLabel="ماه جاری"
@@ -421,15 +419,13 @@ export default function DashboardIndex() {
                     gradient="linear-gradient(90deg, #2563eb 0%, #0284c7 100%)"
                 >
                     <Box sx={{ width: '100%', height: 230 }}>
-                        <LineChart
-                            xAxis={[{ scaleType: 'point', data: monthlyLabels.length ? monthlyLabels : ['فروردین'] }]}
+                        <BarChart
+                            xAxis={[{ scaleType: 'band', data: monthlyLabels.length ? monthlyLabels : ['فروردین'] }]}
                             series={[
                                 {
                                     data: monthlyData.length ? monthlyData : [0],
                                     label: 'بازدید ماهانه',
                                     color: '#0284c7',
-                                    area: true,
-                                    curve: 'catmullRom',
                                 },
                             ]}
                             height={220}
