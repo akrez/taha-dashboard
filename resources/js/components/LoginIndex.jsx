@@ -7,6 +7,7 @@ import {
     Card,
     CardContent,
     CircularProgress,
+    IconButton,
     InputAdornment,
     Stack,
     TextField,
@@ -16,12 +17,15 @@ import {
     BadgeOutlined,
     LockOutlined,
     Login as LoginIcon,
+    Visibility,
+    VisibilityOff,
 } from '@mui/icons-material';
 import { setAuth } from '../auth';
 
 export default function LoginIndex() {
     const [nationalCode, setNationalCode] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -104,8 +108,8 @@ export default function LoginIndex() {
                                         style: { textAlign: 'left' },
                                     },
                                     input: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
+                                        endAdornment: (
+                                            <InputAdornment position="end">
                                                 <BadgeOutlined fontSize="small" />
                                             </InputAdornment>
                                         ),
@@ -115,7 +119,7 @@ export default function LoginIndex() {
 
                             <TextField
                                 label="رمز عبور"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 fullWidth
@@ -125,6 +129,18 @@ export default function LoginIndex() {
                                     input: {
                                         startAdornment: (
                                             <InputAdornment position="start">
+                                                <IconButton
+                                                    aria-label="تغییر نمایش رمز عبور"
+                                                    onClick={() => setShowPassword((prev) => !prev)}
+                                                    edge="start"
+                                                    size="small"
+                                                >
+                                                    {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
                                                 <LockOutlined fontSize="small" />
                                             </InputAdornment>
                                         ),

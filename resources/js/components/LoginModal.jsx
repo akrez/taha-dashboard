@@ -177,8 +177,8 @@ export default function LoginModal({ open, onClose, onSuccess }) {
                                     style: { textAlign: 'left' },
                                 },
                                 input: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
+                                    endAdornment: (
+                                        <InputAdornment position="end">
                                             <BadgeOutlined fontSize="small" color="primary" />
                                         </InputAdornment>
                                     ),
@@ -198,19 +198,19 @@ export default function LoginModal({ open, onClose, onSuccess }) {
                                 input: {
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <LockOutlined fontSize="small" color="primary" />
-                                        </InputAdornment>
-                                    ),
-                                    endAdornment: (
-                                        <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="تغییر نمایش رمز عبور"
                                                 onClick={() => setShowPassword((prev) => !prev)}
-                                                edge="end"
+                                                edge="start"
                                                 size="small"
                                             >
                                                 {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
                                             </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <LockOutlined fontSize="small" color="primary" />
                                         </InputAdornment>
                                     ),
                                 },
