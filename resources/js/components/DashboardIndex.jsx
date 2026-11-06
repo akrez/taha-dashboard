@@ -28,6 +28,7 @@ import {
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useOutletContext } from 'react-router-dom';
+import IranProjectsMap from './IranProjectsMap';
 import SlidesCarousel from './SlidesCarousel';
 
 const faMonths = [
@@ -297,6 +298,9 @@ export default function DashboardIndex() {
             )}
 
             <SlidesCarousel slides={slides} />
+
+            {/* ماکت نمایشی: نقشه تعاملی پروژه‌های استانی */}
+            <IranProjectsMap />
 
             {/* عنوان بخش داشبورد مدیریتی و شاخص‌های کلیدی عملکرد (۶ نمودار ارائه) */}
             <Box
