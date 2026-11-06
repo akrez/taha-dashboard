@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use Spatie\Permission\Guard;
 
 class UserService
 {

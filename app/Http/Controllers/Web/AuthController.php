@@ -14,8 +14,8 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $redirect = $request->query('redirect');
-        $query = $redirect ? '?login=1&redirect=' . urlencode($redirect) : '?login=1';
+        $query = $redirect ? '?login=1&redirect='.urlencode($redirect) : '?login=1';
 
-        return redirect('/' . $query);
+        return redirect('/'.$query);
     }
 }

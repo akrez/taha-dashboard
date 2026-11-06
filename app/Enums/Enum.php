@@ -2,7 +2,6 @@
 
 namespace App\Enums;
 
-use BackedEnum;
 use Illuminate\Support\Facades\Lang;
 
 trait Enum

@@ -21,6 +21,6 @@ class SeedPermissionsCommand extends Command
             $permissions[] = $rbac->findOrCreatePermission($permissionName);
         }
 
-        $this->info("Done!");
+        $this->info('Done!');
     }
 }

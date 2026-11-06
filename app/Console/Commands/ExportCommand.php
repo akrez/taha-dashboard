@@ -36,10 +36,12 @@ class ExportCommand extends Command
         if ($result->successful()) {
             $fullPath = base_path($outputFile);
             $this->components->info("Successfully exported Git HEAD to: {$fullPath}");
+
             return Command::SUCCESS;
         }
 
-        $this->components->error('Git export failed: ' . ($result->errorOutput() ?: $result->output()));
+        $this->components->error('Git export failed: '.($result->errorOutput() ?: $result->output()));
+
         return Command::FAILURE;
     }
 }

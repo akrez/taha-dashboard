@@ -21,7 +21,7 @@ class HomeController extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
-            'visits' =>  $this->visitService->stats(),
+            'visits' => $this->visitService->stats(),
             'slides' => SlideResource::collection($this->slideService->visible()),
             'links' => LinkResource::collection($this->linkService->visible()),
             'date' => [
