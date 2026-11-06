@@ -46,7 +46,7 @@ const columns = [
     { id: 'section', label: 'نام قسمت' },
     { id: 'position', label: 'پست سازمانی' },
     { id: 'membership_type', label: 'نوع عضویت' },
-    { id: 'status', label: 'وضعیت', align: 'center' },
+    { id: 'status', label: 'وضعیت' },
 ];
 
 function userName(user) {
@@ -330,7 +330,7 @@ export default function UsersExcel() {
                                 <TableBody>
                                     {loadingUsers ? (
                                         <TableRow>
-                                            <TableCell colSpan={columns.length} align="center">
+                                            <TableCell colSpan={columns.length}>
                                                 <CircularProgress size={24} sx={{ my: 3 }} />
                                             </TableCell>
                                         </TableRow>
@@ -351,7 +351,7 @@ export default function UsersExcel() {
                                                 <TableCell>{user.section?.name || '—'}</TableCell>
                                                 <TableCell>{user.position?.name || '—'}</TableCell>
                                                 <TableCell>{user.membership_type || '—'}</TableCell>
-                                                <TableCell align="center">
+                                                <TableCell>
                                                     <Chip
                                                         size="small"
                                                         label={user.is_disable ? 'غیرفعال' : 'فعال'}
@@ -364,7 +364,7 @@ export default function UsersExcel() {
                                     )}
                                     {!loadingUsers && users.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={columns.length} align="center">
+                                            <TableCell colSpan={columns.length}>
                                                 کاربری یافت نشد
                                             </TableCell>
                                         </TableRow>

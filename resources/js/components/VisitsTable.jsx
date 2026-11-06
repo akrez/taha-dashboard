@@ -71,7 +71,7 @@ export default function VisitsTable() {
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} align="center">
+                                    <TableCell colSpan={columns.length}>
                                         <CircularProgress size={24} sx={{ my: 2 }} />
                                     </TableCell>
                                 </TableRow>
@@ -101,7 +101,7 @@ export default function VisitsTable() {
                             )}
                             {!loading && rows.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} align="center">
+                                    <TableCell colSpan={columns.length}>
                                         بازدیدی یافت نشد
                                     </TableCell>
                                 </TableRow>

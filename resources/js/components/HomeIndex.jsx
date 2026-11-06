@@ -16,6 +16,8 @@ import {
     Typography,
 } from '@mui/material';
 import {
+    AccountTree as ProjectsIcon,
+    Business as EmployerIcon,
     Home as HomeIndexIcon,
     Link as LinkIcon,
     Login as LoginIcon,
@@ -36,6 +38,8 @@ const navItems = [
     { key: 'visits', label: 'بازدیدها', path: '/visits', icon: <VisibilityIcon />, permission: 'VisitIndex' },
     { key: 'slides', label: 'اسلایدها', path: '/slides', icon: <SlideshowIcon />, permission: 'Slide' },
     { key: 'links', label: 'لینک‌ها', path: '/links', icon: <LinkIcon />, permission: 'Link' },
+    { key: 'employers', label: 'کارفرمایان', path: '/employers', icon: <EmployerIcon />, permission: 'Employer' },
+    { key: 'projects', label: 'پروژه‌ها', path: '/projects', icon: <ProjectsIcon />, permission: 'Project' },
     { key: 'users', label: 'کاربران', path: '/users', icon: <UsersIcon />, permissions: ['UserManager', 'UserIndex'] },
     { key: 'roles', label: 'نقش‌ها', path: '/roles', icon: <RolesIcon />, superAdmin: true },
 ];

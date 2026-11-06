@@ -214,15 +214,15 @@ export default function SlidesTable() {
                                 <TableCell>تصویر</TableCell>
                                 <TableCell>عنوان</TableCell>
                                 <TableCell>توضیح</TableCell>
-                                <TableCell align="center">ترتیب</TableCell>
-                                <TableCell align="center">وضعیت</TableCell>
-                                <TableCell align="center">عملیات</TableCell>
+                                <TableCell>ترتیب</TableCell>
+                                <TableCell>وضعیت</TableCell>
+                                <TableCell>عملیات</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center">
+                                    <TableCell colSpan={6}>
                                         <CircularProgress size={24} sx={{ my: 2 }} />
                                     </TableCell>
                                 </TableRow>
@@ -261,15 +261,15 @@ export default function SlidesTable() {
                                         >
                                             {slide.description || '—'}
                                         </TableCell>
-                                        <TableCell align="center">{slide.sort_order}</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>{slide.sort_order}</TableCell>
+                                        <TableCell>
                                             <Chip
                                                 label={slide.is_visible ? 'نمایش' : 'مخفی'}
                                                 size="small"
                                                 color={slide.is_visible ? 'success' : 'default'}
                                             />
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>
                                             <Tooltip title="ویرایش">
                                                 <IconButton size="small" onClick={() => openEdit(slide)}>
                                                     <EditIcon fontSize="small" />
@@ -293,7 +293,7 @@ export default function SlidesTable() {
                             )}
                             {!loading && slides.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center">
+                                    <TableCell colSpan={6}>
                                         اسلایدی ثبت نشده است
                                     </TableCell>
                                 </TableRow>

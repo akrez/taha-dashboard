@@ -9,6 +9,8 @@ enum PermissionEnum
     case VisitIndex;
     case Slide;
     case Link;
+    case Employer;
+    case Project;
     case UserIndex;
     case UserManager;
 }

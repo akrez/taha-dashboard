@@ -217,15 +217,15 @@ export default function LinksTable() {
                                 <TableCell>آیکن</TableCell>
                                 <TableCell>عنوان</TableCell>
                                 <TableCell>آدرس</TableCell>
-                                <TableCell align="center">ترتیب</TableCell>
-                                <TableCell align="center">محل نمایش</TableCell>
-                                <TableCell align="center">عملیات</TableCell>
+                                <TableCell>ترتیب</TableCell>
+                                <TableCell>محل نمایش</TableCell>
+                                <TableCell>عملیات</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center">
+                                    <TableCell colSpan={6}>
                                         <CircularProgress size={24} sx={{ my: 2 }} />
                                     </TableCell>
                                 </TableRow>
@@ -276,8 +276,8 @@ export default function LinksTable() {
                                                 '—'
                                             )}
                                         </TableCell>
-                                        <TableCell align="center">{link.sort_order}</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>{link.sort_order}</TableCell>
+                                        <TableCell>
                                             <Stack
                                                 direction="row"
                                                 spacing={0.5}
@@ -296,7 +296,7 @@ export default function LinksTable() {
                                                 )}
                                             </Stack>
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>
                                             <Tooltip title="ویرایش">
                                                 <IconButton size="small" onClick={() => openEdit(link)}>
                                                     <EditIcon fontSize="small" />
@@ -320,7 +320,7 @@ export default function LinksTable() {
                             )}
                             {!loading && links.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center">
+                                    <TableCell colSpan={6}>
                                         لینکی ثبت نشده است
                                     </TableCell>
                                 </TableRow>

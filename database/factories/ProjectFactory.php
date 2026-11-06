@@ -16,6 +16,7 @@ class ProjectFactory extends Factory
     {
         return [
             'name' => fake()->unique()->word(),
+            'is_active' => true,
         ];
     }
 }

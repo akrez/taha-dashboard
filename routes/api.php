@@ -2,8 +2,10 @@
 
 use App\Enums\PermissionEnum;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmployerController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LinkController;
+use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\UserController;
@@ -28,6 +30,18 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/links', [LinkController::class, 'store']);
         Route::put('/links/{link}', [LinkController::class, 'update']);
         Route::delete('/links/{link}', [LinkController::class, 'destroy']);
+    });
+    Route::middleware(['permission:'.PermissionEnum::Employer->name])->group(function () {
+        Route::get('/employers', [EmployerController::class, 'index']);
+        Route::post('/employers', [EmployerController::class, 'store']);
+        Route::put('/employers/{employer}', [EmployerController::class, 'update']);
+    });
+    Route::middleware(['permission:'.PermissionEnum::Project->name])->group(function () {
+        Route::get('/projects', [ProjectController::class, 'index']);
+        Route::get('/projects/options', [ProjectController::class, 'options']);
+        Route::post('/projects', [ProjectController::class, 'store']);
+        Route::put('/projects/{project}', [ProjectController::class, 'update']);
+        Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
     });
     Route::middleware(['role:'.RbacService::superAdminRoleName()])->group(function () {
         Route::get('/roles', [RoleController::class, 'index']);

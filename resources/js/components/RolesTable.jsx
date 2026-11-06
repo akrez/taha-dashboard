@@ -309,13 +309,13 @@ export default function RolesTable() {
                                 <TableCell>نام نقش</TableCell>
                                 <TableCell>دسترسیها</TableCell>
                                 <TableCell>کاربران</TableCell>
-                                <TableCell align="center">عملیات</TableCell>
+                                <TableCell>عملیات</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={4} align="center">
+                                    <TableCell colSpan={4}>
                                         <CircularProgress size={24} sx={{ my: 2 }} />
                                     </TableCell>
                                 </TableRow>
@@ -377,7 +377,7 @@ export default function RolesTable() {
                                                 </Box>
                                             )}
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>
                                             <Tooltip title="ویرایش نام">
                                                 <span>
                                                     <IconButton
@@ -417,7 +417,7 @@ export default function RolesTable() {
                             )}
                             {!loading && roles.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} align="center">
+                                    <TableCell colSpan={4}>
                                         نقشی یافت نشد
                                     </TableCell>
                                 </TableRow>

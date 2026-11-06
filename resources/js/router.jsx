@@ -1,8 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import DashboardIndex from './components/DashboardIndex';
+import EmployersTable from './components/EmployersTable';
 import { RequireAnyPermission, RequireAuth, RequirePermission, RequireSuperAdmin } from './components/Guards';
 import HomeIndex from './components/HomeIndex';
 import LinksTable from './components/LinksTable';
+import ProjectsTable from './components/ProjectsTable';
 import RolesTable from './components/RolesTable';
 import SlidesTable from './components/SlidesTable';
 import VisitsTable from './components/VisitsTable';
@@ -44,6 +46,26 @@ export default function AppRoutes() {
                             <RequireAuth>
                                 <RequirePermission permission="Link">
                                     <LinksTable />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="employers"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Employer">
+                                    <EmployersTable />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="projects"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Project">
+                                    <ProjectsTable />
                                 </RequirePermission>
                             </RequireAuth>
                         }
