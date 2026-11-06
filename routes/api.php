@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmployerController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LinkController;
+use App\Http\Controllers\Api\MaintenanceController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SlideController;
@@ -14,6 +15,7 @@ use App\Services\RbacService;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::middleware(['permission:'.PermissionEnum::VisitIndex->name])->group(function () {
