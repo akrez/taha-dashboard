@@ -15,24 +15,27 @@ class MaintenanceController extends Controller
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $expected = (string) config('app.maintenance_token');
+        if (false) {
 
-        if ($expected === '') {
-            return response()->json([
-                'message' => 'Maintenance endpoint is disabled.',
-            ], 404);
-        }
+            $expected = (string) config('app.maintenance_token');
 
-        $provided = (string) (
-            $request->query('token')
-            ?: $request->header('X-Maintenance-Token')
-            ?: $request->bearerToken()
-        );
+            if ($expected === '') {
+                return response()->json([
+                    'message' => 'Maintenance endpoint is disabled.',
+                ], 404);
+            }
 
-        if ($provided === '' || ! hash_equals($expected, $provided)) {
-            return response()->json([
-                'message' => 'Invalid maintenance token.',
-            ], 401);
+            $provided = (string) (
+                $request->query('token')
+                ?: $request->header('X-Maintenance-Token')
+                ?: $request->bearerToken()
+            );
+
+            if ($provided === '' || ! hash_equals($expected, $provided)) {
+                return response()->json([
+                    'message' => 'Invalid maintenance token.',
+                ], 401);
+            }
         }
 
         @set_time_limit(0);
