@@ -44,7 +44,7 @@ class UsersExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMappin
     {
         return [
             $user->discipline?->name,
-            $user->project?->name,
+            $user->project?->project_name,
             $user->section?->name,
             $user->position?->name,
             $user->personnel_code,

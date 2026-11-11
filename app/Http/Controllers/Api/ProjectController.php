@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Project\StoreProjectRequest;
 use App\Http\Requests\Api\Project\UpdateProjectRequest;
+use App\Http\Requests\Api\Project\UpdateProjectSystemStatusRequest;
 use App\Http\Resources\Api\Project\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectService;
@@ -18,20 +19,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Choices for the project form (employers and project managers).
+     * Choices for the project form (employers).
      */
     public function options(ProjectService $projects): JsonResponse
     {
-        $options = $projects->options();
-
         return response()->json([
-            'employers' => $options['employers']->map(fn ($employer) => [
+            'employers' => $projects->options()->map(fn ($employer) => [
                 'id' => $employer->id,
                 'name' => $employer->name,
-            ])->values(),
-            'users' => $options['users']->map(fn ($user) => [
-                'id' => $user->id,
-                'name' => trim($user->first_name.' '.$user->last_name),
+                'is_active' => $employer->is_active,
             ])->values(),
         ]);
     }
@@ -40,7 +36,7 @@ class ProjectController extends Controller
     {
         $project = $projects->create($request->validated());
 
-        return (new ProjectResource($project->load(['employer', 'manager'])))
+        return (new ProjectResource($project->load('employer')))
             ->response()
             ->setStatusCode(201);
     }
@@ -49,13 +45,19 @@ class ProjectController extends Controller
     {
         $projects->update($project, $request->validated());
 
-        return (new ProjectResource($project->load(['employer', 'manager'])))->response();
+        return (new ProjectResource($project->load('employer')))->response();
     }
 
-    public function destroy(Project $project, ProjectService $projects): JsonResponse
-    {
-        $projects->delete($project);
+    /**
+     * تغییر سریع وضعیت پروژه در سیستم از صفحه فهرست، بدون ارسال کل اطلاعات پروژه.
+     */
+    public function updateSystemStatus(
+        UpdateProjectSystemStatusRequest $request,
+        Project $project,
+        ProjectService $projects,
+    ): JsonResponse {
+        $projects->updateSystemStatus($project, $request->boolean('is_active'));
 
-        return response()->json(['message' => 'پروژه حذف شد.']);
+        return (new ProjectResource($project->load('employer')))->response();
     }
 }

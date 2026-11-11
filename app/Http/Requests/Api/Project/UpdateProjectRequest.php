@@ -2,34 +2,25 @@
 
 namespace App\Http\Requests\Api\Project;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProjectRequest extends FormRequest
+class UpdateProjectRequest extends BaseProjectRequest
 {
-    /**
-     * The route is already guarded by the Project permission middleware.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * @return array<string, mixed>
      */
     public function rules(): array
     {
+        $project = $this->route('project');
+
         return [
-            'name' => [
+            'internal_code' => [
                 'required',
-                'string',
-                'max:255',
-                Rule::unique('projects', 'name')->ignore($this->route('project')),
+                'digits:8',
+                Rule::unique('projects', 'internal_code')->ignore($project),
             ],
-            'employer_id' => ['nullable', 'integer', 'exists:employers,id'],
-            'manager_id' => ['nullable', 'integer', 'exists:users,id'],
-            'is_active' => ['nullable', 'boolean'],
+
+            ...$this->sharedRules(),
         ];
     }
 }

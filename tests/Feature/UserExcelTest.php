@@ -111,7 +111,7 @@ class UserExcelTest extends TestCase
 
         // بررسی ایجاد روابط
         $this->assertDatabaseHas('disciplines', ['name' => 'مترو ریلی']);
-        $this->assertDatabaseHas('projects', ['name' => 'خط 10']);
+        $this->assertDatabaseHas('projects', ['project_name' => 'خط 10']);
         $this->assertDatabaseHas('sections', ['name' => 'فناوری اطلاعات']);
         $this->assertDatabaseHas('positions', ['name' => 'مدیر فناوری اطلاعات']);
 

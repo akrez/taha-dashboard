@@ -347,7 +347,7 @@ export default function UsersExcel() {
                                                 <TableCell dir="ltr">{user.personnel_code || '—'}</TableCell>
                                                 <TableCell>{user.father_name || '—'}</TableCell>
                                                 <TableCell>{user.discipline?.name || '—'}</TableCell>
-                                                <TableCell>{user.project?.name || '—'}</TableCell>
+                                                <TableCell>{user.project?.project_name || '—'}</TableCell>
                                                 <TableCell>{user.section?.name || '—'}</TableCell>
                                                 <TableCell>{user.position?.name || '—'}</TableCell>
                                                 <TableCell>{user.membership_type || '—'}</TableCell>

@@ -257,7 +257,42 @@ class UserImportService
     {
         $name = $this->nullableString($name);
 
-        return $name === null ? null : $model::query()->firstOrCreate(['name' => $name])->getKey();
+        if ($name === null) {
+            return null;
+        }
+
+        // پروژه‌ها به جای ستون name از project_name استفاده می‌کنند.
+        if ($model === Project::class) {
+            $project = Project::query()->firstOrCreate(
+                ['project_name' => $name],
+                $this->newProjectAttributes(),
+            );
+
+            return $project->getKey();
+        }
+
+        return $model::query()->firstOrCreate(['name' => $name])->getKey();
+    }
+
+    /**
+     * ستون‌های اجباری پروژه برای پروژه‌هایی که هنگام ورود کاربران ساخته می‌شوند.
+     *
+     * @return array<string, string>
+     */
+    private function newProjectAttributes(): array
+    {
+        $internalCode = str_pad(
+            (string) (((int) Project::query()->max('internal_code')) + 1),
+            8,
+            '0',
+            STR_PAD_LEFT,
+        );
+
+        return [
+            'internal_code' => $internalCode,
+            'contract_number' => 'CT-'.$internalCode,
+            'activity_status' => 'فعال',
+        ];
     }
 
     /** @return array<int, string> */

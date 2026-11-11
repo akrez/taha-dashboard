@@ -15,7 +15,15 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->word(),
+            'internal_code' => str_pad(
+                (string) fake()->unique()->numberBetween(1, 99999999),
+                8,
+                '0',
+                STR_PAD_LEFT,
+            ),
+            'project_name' => fake()->unique()->words(3, true),
+            'contract_number' => fake()->unique()->numerify('CT-#####'),
+            'activity_status' => 'فعال',
             'is_active' => true,
         ];
     }

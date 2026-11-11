@@ -42,7 +42,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/projects/options', [ProjectController::class, 'options']);
         Route::post('/projects', [ProjectController::class, 'store']);
         Route::put('/projects/{project}', [ProjectController::class, 'update']);
-        Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
+        Route::patch('/projects/{project}/system-status', [ProjectController::class, 'updateSystemStatus']);
     });
     Route::middleware(['role:'.RbacService::superAdminRoleName()])->group(function () {
         Route::post('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');

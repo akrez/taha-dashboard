@@ -167,7 +167,7 @@ export default function HomeIndex() {
     const maintenanceEntries = Object.entries(maintenanceFeedback?.results ?? {});
 
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 'کاربر';
-    const userRoleInfo = [user?.position?.name, user?.project?.name].filter(Boolean).join(' - ');
+    const userRoleInfo = [user?.position?.name, user?.project?.project_name].filter(Boolean).join(' - ');
 
     const visibleNavItems = navItems.filter((item) => {
         if (item.superAdmin && !isSuperAdmin()) {
@@ -331,9 +331,9 @@ export default function HomeIndex() {
                                                     {user.position.name}
                                                 </Typography>
                                             )}
-                                            {user?.project?.name && (
+                                            {user?.project?.project_name && (
                                                 <Typography variant="caption" color="text.secondary" textAlign="center">
-                                                    {user.project.name}
+                                                    {user.project.project_name}
                                                 </Typography>
                                             )}
                                         </Box>
