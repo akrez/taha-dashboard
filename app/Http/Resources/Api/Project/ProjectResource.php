@@ -66,7 +66,7 @@ class ProjectResource extends JsonResource
             'contract_type' => $this->contract_type,
 
             // وضعیت عمرانی پروژه
-            'is_civil' => $this->is_civil,
+            'is_civil' => $this->is_civil?->name,
 
             // موقعیت جغرافیایی
             'country' => $this->country,
@@ -74,7 +74,7 @@ class ProjectResource extends JsonResource
             'county' => $this->county,
 
             // وضعیت فعالیت
-            'activity_status' => $this->activity_status,
+            'activity_status' => $this->activity_status?->name,
 
             // وضعیت پروژه در سیستم (فعال/غیرفعال)
             'is_active' => $this->is_active,

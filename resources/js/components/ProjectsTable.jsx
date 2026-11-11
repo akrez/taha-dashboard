@@ -96,7 +96,7 @@ const emptyForm = {
     project_status: '',
     contract_type: '',
     is_civil: '',
-    activity_status: 'فعال',
+    activity_status: '',
 
     // موقعیت جغرافیایی
     country: '',
@@ -130,7 +130,11 @@ function FormSection({ title, children }) {
 
 export default function ProjectsTable() {
     const [projects, setProjects] = useState([]);
-    const [options, setOptions] = useState({ employers: [] });
+    const [options, setOptions] = useState({
+        employers: [],
+        civil_statuses: [],
+        activity_statuses: [],
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [statusError, setStatusError] = useState('');
@@ -153,6 +157,8 @@ export default function ProjectsTable() {
             setProjects(projectsRes.data.data ?? []);
             setOptions({
                 employers: optionsRes.data.employers ?? [],
+                civil_statuses: optionsRes.data.civil_statuses ?? [],
+                activity_statuses: optionsRes.data.activity_statuses ?? [],
             });
             setError('');
         } catch (err) {
@@ -167,7 +173,10 @@ export default function ProjectsTable() {
     }, [load]);
 
     const openCreate = () => {
-        setForm(emptyForm);
+        setForm({
+            ...emptyForm,
+            activity_status: options.activity_statuses[0]?.name ?? '',
+        });
         setFormError('');
         setDialog({ mode: 'create' });
     };
@@ -653,8 +662,9 @@ export default function ProjectsTable() {
                             onChange={setField('is_civil')}
                         >
                             <MenuItem value="">انتخاب نشده</MenuItem>
-                            <MenuItem value="عمرانی">عمرانی</MenuItem>
-                            <MenuItem value="غیرعمرانی">غیرعمرانی</MenuItem>
+                            {options.civil_statuses.map((status) => (
+                                <MenuItem key={status.name} value={status.name}>{status.trans}</MenuItem>
+                            ))}
                         </TextField>
                         <TextField
                             fullWidth
@@ -664,8 +674,9 @@ export default function ProjectsTable() {
                             value={form.activity_status}
                             onChange={setField('activity_status')}
                         >
-                            <MenuItem value="فعال">فعال</MenuItem>
-                            <MenuItem value="غیرفعال">غیرفعال</MenuItem>
+                            {options.activity_statuses.map((status) => (
+                                <MenuItem key={status.name} value={status.name}>{status.trans}</MenuItem>
+                            ))}
                         </TextField>
                     </FormSection>
 

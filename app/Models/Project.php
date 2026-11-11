@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ActivityStatusEnum;
+use App\Enums\CivilStatusEnum;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -95,6 +97,8 @@ class Project extends Model
             'project_dimension' => 'decimal:2',
             'base_year' => 'integer',
             'is_active' => 'boolean',
+            'is_civil' => CivilStatusEnum::class,
+            'activity_status' => ActivityStatusEnum::class,
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ActivityStatusEnum;
 use App\Exports\UsersExport;
 use App\Models\Discipline;
 use App\Models\Position;
@@ -291,7 +292,7 @@ class UserImportService
         return [
             'internal_code' => $internalCode,
             'contract_number' => 'CT-'.$internalCode,
-            'activity_status' => 'فعال',
+            'activity_status' => ActivityStatusEnum::Active,
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ActivityStatusEnum;
+use App\Enums\CivilStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Project\StoreProjectRequest;
 use App\Http\Requests\Api\Project\UpdateProjectRequest;
@@ -19,7 +21,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Choices for the project form (employers).
+     * Choices for the project form.
      */
     public function options(ProjectService $projects): JsonResponse
     {
@@ -29,6 +31,8 @@ class ProjectController extends Controller
                 'name' => $employer->name,
                 'is_active' => $employer->is_active,
             ])->values(),
+            'civil_statuses' => CivilStatusEnum::collection(),
+            'activity_statuses' => ActivityStatusEnum::collection(),
         ]);
     }
 

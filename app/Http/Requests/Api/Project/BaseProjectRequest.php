@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Api\Project;
 
+use App\Enums\ActivityStatusEnum;
+use App\Enums\CivilStatusEnum;
 use App\Rules\JalaliDate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 abstract class BaseProjectRequest extends FormRequest
 {
@@ -179,7 +182,7 @@ abstract class BaseProjectRequest extends FormRequest
 
             'is_civil' => [
                 'nullable',
-                'in:عمرانی,غیرعمرانی',
+                Rule::in(CivilStatusEnum::names()),
             ],
 
             // موقعیت جغرافیایی
@@ -190,7 +193,7 @@ abstract class BaseProjectRequest extends FormRequest
             // وضعیت فعالیت
             'activity_status' => [
                 'required',
-                'in:فعال,غیرفعال',
+                Rule::in(ActivityStatusEnum::names()),
             ],
         ];
     }

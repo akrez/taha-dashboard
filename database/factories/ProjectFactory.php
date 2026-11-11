@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActivityStatusEnum;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +24,7 @@ class ProjectFactory extends Factory
             ),
             'project_name' => fake()->unique()->words(3, true),
             'contract_number' => fake()->unique()->numerify('CT-#####'),
-            'activity_status' => 'فعال',
+            'activity_status' => ActivityStatusEnum::Active,
             'is_active' => true,
         ];
     }
