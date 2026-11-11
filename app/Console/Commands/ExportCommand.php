@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
+use Symfony\Component\Process\ExecutableFinder;
+use Throwable;
 
 class ExportCommand extends Command
 {
@@ -26,21 +29,63 @@ class ExportCommand extends Command
      */
     public function handle(): int
     {
-        $outputFile = $this->option('output') ?: 'head.zip';
+        try {
 
-        $this->components->info("Exporting git HEAD to {$outputFile}...");
+            $basePath = realpath(base_path());
+            $outputFile = (string) ($this->option('output') ?: 'head.zip');
+            $fullPath = str_starts_with($outputFile, DIRECTORY_SEPARATOR)
+                ? $outputFile
+                : $basePath.DIRECTORY_SEPARATOR.$outputFile;
 
-        $result = Process::path(base_path())
-            ->run(['git', 'archive', '-o', $outputFile, 'HEAD']);
+            $this->components->info("Exporting git HEAD to {$outputFile}...");
+
+            if (! File::exists($basePath.'/.git')) {
+                $this->components->error(
+                    "Not a git repository: {$basePath}/.git was not found. ".
+                    'app:export only works on a checkout that contains Git history.'
+                );
+
+                return Command::FAILURE;
+            }
+
+            $git = (new ExecutableFinder)->find('git');
+            if ($git === null) {
+                $this->components->error(
+                    'The git executable was not found in PATH. '.
+                    'Install git in the runtime (for the Docker image: `apk add --no-cache git`).'
+                );
+
+                return Command::FAILURE;
+            }
+
+            $outputDirectory = dirname($fullPath);
+            if (! File::isDirectory($outputDirectory)) {
+                File::makeDirectory($outputDirectory, 0755, true);
+            }
+
+            $safeDirectory = 'safe.directory='.$basePath;
+
+            $result = Process::path($basePath)
+                ->run([$git, '-c', $safeDirectory, 'archive', '-o', $fullPath, 'HEAD']);
+        } catch (Throwable $exception) {
+            $this->components->error('Git export failed: '.$exception->getMessage());
+
+            return Command::FAILURE;
+        }
 
         if ($result->successful()) {
-            $fullPath = base_path($outputFile);
             $this->components->info("Successfully exported Git HEAD to: {$fullPath}");
 
             return Command::SUCCESS;
         }
 
-        $this->components->error('Git export failed: '.($result->errorOutput() ?: $result->output()));
+        $details = trim($result->errorOutput().PHP_EOL.$result->output());
+
+        if ($details === '') {
+            $details = 'no error output was produced (exit code '.$result->exitCode().').';
+        }
+
+        $this->components->error('Git export failed: '.$details);
 
         return Command::FAILURE;
     }
