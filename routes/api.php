@@ -15,7 +15,6 @@ use App\Services\RbacService;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::middleware(['permission:'.PermissionEnum::VisitIndex->name])->group(function () {
@@ -46,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
     });
     Route::middleware(['role:'.RbacService::superAdminRoleName()])->group(function () {
+        Route::post('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');
         Route::get('/roles', [RoleController::class, 'index']);
         Route::get('/roles/permissions', [RoleController::class, 'permissions']);
         Route::get('/roles/users', [RoleController::class, 'users']);

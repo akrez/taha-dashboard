@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
+    Alert,
     AppBar,
     Avatar,
     Box,
     Button,
+    CircularProgress,
     CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
     IconButton,
     ListItemIcon,
@@ -17,7 +24,10 @@ import {
 } from '@mui/material';
 import {
     AccountTree as ProjectsIcon,
+    Build as MaintenanceIcon,
     Business as EmployerIcon,
+    CheckCircle as MaintenanceSuccessIcon,
+    Error as MaintenanceErrorIcon,
     Home as HomeIndexIcon,
     Link as LinkIcon,
     Login as LoginIcon,
@@ -44,6 +54,12 @@ const navItems = [
     { key: 'roles', label: 'نقش‌ها', path: '/roles', icon: <RolesIcon />, superAdmin: true },
 ];
 
+const maintenanceStepLabels = {
+    migrate: 'اجرای مهاجرت‌های پایگاه داده',
+    seed_permissions: 'به‌روزرسانی دسترسی‌ها',
+    optimize: 'بهینه‌سازی و پاک‌سازی کش',
+};
+
 export default function HomeIndex() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -54,6 +70,9 @@ export default function HomeIndex() {
     });
     const [homeData, setHomeData] = useState(null);
     const [homeLoading, setHomeLoading] = useState(true);
+    const [maintenanceOpen, setMaintenanceOpen] = useState(false);
+    const [maintenanceRunning, setMaintenanceRunning] = useState(false);
+    const [maintenanceFeedback, setMaintenanceFeedback] = useState(null);
 
     // Listen for auth-required events triggered by guards or expired sessions
     useEffect(() => {
@@ -108,6 +127,44 @@ export default function HomeIndex() {
         handleMenuClose();
         logout();
     };
+
+    const handleMaintenanceOpen = () => {
+        setMaintenanceFeedback(null);
+        setMaintenanceOpen(true);
+    };
+
+    const handleMaintenanceClose = () => {
+        if (!maintenanceRunning) {
+            setMaintenanceOpen(false);
+        }
+    };
+
+    const handleMaintenanceRun = async () => {
+        setMaintenanceRunning(true);
+        setMaintenanceFeedback(null);
+
+        try {
+            const { data } = await axios.post('/api/maintenance');
+
+            setMaintenanceFeedback({
+                severity: 'success',
+                message: data.message || 'عملیات نگهداری با موفقیت انجام شد.',
+                results: data.results ?? {},
+            });
+        } catch (error) {
+            const data = error.response?.data;
+
+            setMaintenanceFeedback({
+                severity: 'error',
+                message: data?.message || 'اجرای عملیات نگهداری با خطا مواجه شد.',
+                results: data?.results ?? {},
+            });
+        } finally {
+            setMaintenanceRunning(false);
+        }
+    };
+
+    const maintenanceEntries = Object.entries(maintenanceFeedback?.results ?? {});
 
     const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 'کاربر';
     const userRoleInfo = [user?.position?.name, user?.project?.name].filter(Boolean).join(' - ');
@@ -199,6 +256,29 @@ export default function HomeIndex() {
                                 ) : null}
                             </Button>
                         ))}
+                        {isSuperAdmin() && (
+                            <Button
+                                color="inherit"
+                                onClick={handleMaintenanceOpen}
+                                startIcon={<MaintenanceIcon />}
+                                sx={{
+                                    minWidth: { xs: 40, sm: 64 },
+                                    px: { xs: 0.75, sm: 1.5 },
+                                    gap: 1,
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                        bgcolor: 'rgba(255, 255, 255, 0.1)',
+                                    },
+                                    '& .MuiButton-startIcon': {
+                                        m: 0,
+                                    },
+                                }}
+                            >
+                                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                                    نگهداری
+                                </Box>
+                            </Button>
+                        )}
                     </Box>
 
                     <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -321,6 +401,96 @@ export default function HomeIndex() {
                 onClose={handleLoginClose}
                 onSuccess={handleLoginSuccess}
             />
+
+            <Dialog
+                open={maintenanceOpen}
+                onClose={handleMaintenanceClose}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>عملیات نگهداری و راه‌اندازی</DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ mb: 2 }}>
+                        با اجرای این عملیات، مهاجرت‌های پایگاه داده اجرا، دسترسی‌ها به‌روزرسانی و کش برنامه پاک‌سازی می‌شود. این کار ممکن است چند لحظه زمان ببرد.
+                    </DialogContentText>
+
+                    {maintenanceRunning && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 2 }}>
+                            <CircularProgress size={22} />
+                            <Typography variant="body2">در حال اجرای عملیات...</Typography>
+                        </Box>
+                    )}
+
+                    {maintenanceFeedback && (
+                        <>
+                            <Alert severity={maintenanceFeedback.severity} sx={{ mb: maintenanceEntries.length ? 2 : 0 }}>
+                                {maintenanceFeedback.message}
+                            </Alert>
+
+                            {maintenanceEntries.length > 0 && (
+                                <Box
+                                    component="ul"
+                                    sx={{
+                                        listStyle: 'none',
+                                        m: 0,
+                                        p: 0,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 1.5,
+                                    }}
+                                >
+                                    {maintenanceEntries.map(([step, result]) => (
+                                        <Box component="li" key={step}>
+                                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                                                {result?.success ? (
+                                                    <MaintenanceSuccessIcon color="success" fontSize="small" sx={{ mt: 0.25 }} />
+                                                ) : (
+                                                    <MaintenanceErrorIcon color="error" fontSize="small" sx={{ mt: 0.25 }} />
+                                                )}
+                                                <Box sx={{ minWidth: 0 }}>
+                                                    <Typography variant="body2" fontWeight={600}>
+                                                        {maintenanceStepLabels[step] ?? step}
+                                                    </Typography>
+                                                    {result?.output && (
+                                                        <Typography
+                                                            component="pre"
+                                                            variant="caption"
+                                                            color="text.secondary"
+                                                            sx={{
+                                                                mt: 0.5,
+                                                                mb: 0,
+                                                                whiteSpace: 'pre-wrap',
+                                                                wordBreak: 'break-word',
+                                                                fontFamily: 'inherit',
+                                                            }}
+                                                        >
+                                                            {result.output}
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            )}
+                        </>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleMaintenanceClose} disabled={maintenanceRunning}>
+                        {maintenanceFeedback ? 'بستن' : 'انصراف'}
+                    </Button>
+                    {maintenanceFeedback?.severity !== 'success' && (
+                        <Button
+                            variant="contained"
+                            onClick={handleMaintenanceRun}
+                            disabled={maintenanceRunning}
+                        >
+                            {maintenanceFeedback ? 'تلاش دوباره' : 'اجرا'}
+                        </Button>
+                    )}
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

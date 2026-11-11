@@ -25,6 +25,7 @@ class UpdateLinkRequest extends FormRequest
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'show_in_top' => ['nullable', 'boolean'],
             'show_in_bottom' => ['nullable', 'boolean'],
+            'show_in_sidebar' => ['nullable', 'boolean'],
             'file' => ['nullable', 'file', 'max:5120'],
         ];
     }

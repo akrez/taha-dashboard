@@ -56,6 +56,7 @@ const emptyForm = {
     sort_order: 0,
     show_in_top: true,
     show_in_bottom: false,
+    show_in_sidebar: false,
 };
 
 export default function LinksTable() {
@@ -117,6 +118,7 @@ export default function LinksTable() {
             sort_order: link.sort_order ?? 0,
             show_in_top: Boolean(link.show_in_top),
             show_in_bottom: Boolean(link.show_in_bottom),
+            show_in_sidebar: Boolean(link.show_in_sidebar),
         });
         setFile(null);
         setPreview(link.file_url ?? null);
@@ -150,6 +152,7 @@ export default function LinksTable() {
         payload.append('sort_order', String(form.sort_order ?? 0));
         payload.append('show_in_top', form.show_in_top ? '1' : '0');
         payload.append('show_in_bottom', form.show_in_bottom ? '1' : '0');
+        payload.append('show_in_sidebar', form.show_in_sidebar ? '1' : '0');
 
         if (file) {
             payload.append('file', file);
@@ -291,9 +294,14 @@ export default function LinksTable() {
                                                 {link.show_in_bottom && (
                                                     <Chip label="پایین" size="small" color="success" />
                                                 )}
-                                                {!link.show_in_top && !link.show_in_bottom && (
-                                                    <Chip label="مخفی" size="small" />
+                                                {link.show_in_sidebar && (
+                                                    <Chip label="کنار اسلایدشو" size="small" color="secondary" />
                                                 )}
+                                                {!link.show_in_top &&
+                                                    !link.show_in_bottom &&
+                                                    !link.show_in_sidebar && (
+                                                        <Chip label="مخفی" size="small" />
+                                                    )}
                                             </Stack>
                                         </TableCell>
                                         <TableCell>
@@ -422,6 +430,20 @@ export default function LinksTable() {
                                 }
                             />
                             <Typography variant="body2">نمایش در پایین</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Switch
+                                checked={form.show_in_sidebar}
+                                onChange={(event) =>
+                                    setForm((current) => ({
+                                        ...current,
+                                        show_in_sidebar: event.target.checked,
+                                    }))
+                                }
+                            />
+                            <Typography variant="body2">
+                                نمایش در نوار کناری اسلایدشو (سمت راست)
+                            </Typography>
                         </Box>
                     </Stack>
                 </DialogContent>

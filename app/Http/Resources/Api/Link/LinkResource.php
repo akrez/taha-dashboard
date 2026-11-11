@@ -20,6 +20,7 @@ class LinkResource extends JsonResource
             'sort_order' => $this->sort_order,
             'show_in_top' => $this->show_in_top,
             'show_in_bottom' => $this->show_in_bottom,
+            'show_in_sidebar' => $this->show_in_sidebar,
             'file_url' => $this->file ? app(FileService::class)->url($this->file) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

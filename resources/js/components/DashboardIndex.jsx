@@ -29,7 +29,8 @@ import {
 import { alpha } from '@mui/material/styles';
 import { useOutletContext } from 'react-router-dom';
 import IranProjectsMap from './IranProjectsMap';
-import SlidesCarousel from './SlidesCarousel';
+import SlidesCarousel, { SLIDESHOW_HEIGHT } from './SlidesCarousel';
+import SlideshowSidebar from './SlideshowSidebar';
 
 const faMonths = [
     'فروردین',
@@ -198,6 +199,7 @@ export default function DashboardIndex() {
 
     const topLinks = (links ?? []).filter((link) => link.show_in_top);
     const bottomLinks = (links ?? []).filter((link) => link.show_in_bottom);
+    const sidebarLinks = (links ?? []).filter((link) => link.show_in_sidebar);
 
     // واقعی: داده‌های آمار زنده بازدیدها از بک‌اند
     const hourlyData = visits?.hourlyChart?.data ?? [];
@@ -297,7 +299,18 @@ export default function DashboardIndex() {
                 </Box>
             )}
 
-            <SlidesCarousel slides={slides} />
+            {slides.length > 0 && sidebarLinks.length > 0 ? (
+                <Box sx={{ display: 'flex', alignItems: 'stretch', height: SLIDESHOW_HEIGHT }}>
+                    {/* In RTL the first flex child sits on the right, so the
+                        rail lines up with the right side of the slideshow. */}
+                    <SlideshowSidebar links={sidebarLinks} />
+                    <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                        <SlidesCarousel slides={slides} />
+                    </Box>
+                </Box>
+            ) : (
+                <SlidesCarousel slides={slides} />
+            )}
 
             {/* ماکت نمایشی: نقشه تعاملی پروژه‌های استانی */}
             <IranProjectsMap />

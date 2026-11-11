@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 const AUTOPLAY_MS = 5000;
 const FADE_MS = 600;
 
+export const SLIDESHOW_HEIGHT = { xs: 220, sm: 300, md: 380 };
+
 /**
  * Auto-advancing carousel of the slides marked as visible, shown on the home
  * page for every visitor. The slides come from the single home API payload.
@@ -39,7 +41,7 @@ export default function SlidesCarousel({ slides = [] }) {
         <Box
             sx={{
                 position: 'relative',
-                height: { xs: 220, sm: 300, md: 380 },
+                height: SLIDESHOW_HEIGHT,
                 borderRadius: 0,
                 overflow: 'hidden',
                 bgcolor: 'grey.900',

@@ -23,8 +23,8 @@ class LinkService
     }
 
     /**
-     * Links shown anywhere on the home page (top bar or bottom row), in
-     * display order.
+     * Links shown anywhere on the home page (top bar, bottom row or the
+     * slideshow sidebar), in display order.
      */
     public function visible(): Collection
     {
@@ -32,7 +32,8 @@ class LinkService
             ->with('file')
             ->where(fn ($query) => $query
                 ->where('show_in_top', true)
-                ->orWhere('show_in_bottom', true))
+                ->orWhere('show_in_bottom', true)
+                ->orWhere('show_in_sidebar', true))
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get();

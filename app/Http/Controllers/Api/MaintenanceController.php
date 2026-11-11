@@ -4,40 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Throwable;
 
 class MaintenanceController extends Controller
 {
     /**
-     * Run the application maintenance commands.
+     * Run the application maintenance commands (super admins only).
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        if (false) {
-
-            $expected = (string) config('app.maintenance_token');
-
-            if ($expected === '') {
-                return response()->json([
-                    'message' => 'Maintenance endpoint is disabled.',
-                ], 404);
-            }
-
-            $provided = (string) (
-                $request->query('token')
-                ?: $request->header('X-Maintenance-Token')
-                ?: $request->bearerToken()
-            );
-
-            if ($provided === '' || ! hash_equals($expected, $provided)) {
-                return response()->json([
-                    'message' => 'Invalid maintenance token.',
-                ], 401);
-            }
-        }
-
         @set_time_limit(0);
 
         $results = [];

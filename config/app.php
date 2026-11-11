@@ -123,16 +123,4 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Maintenance API Token
-    |--------------------------------------------------------------------------
-    |
-    | Secret used by POST /api/maintenance. Send it with the
-    | X-Maintenance-Token header. Leave empty to disable the endpoint.
-    |
-    */
-
-    'maintenance_token' => env('MAINTENANCE_TOKEN'),
-
 ];

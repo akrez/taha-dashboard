@@ -22,6 +22,7 @@ class Link extends Model
         'sort_order',
         'show_in_top',
         'show_in_bottom',
+        'show_in_sidebar',
         'created_by',
     ];
 
@@ -34,6 +35,7 @@ class Link extends Model
             'sort_order' => 'integer',
             'show_in_top' => 'boolean',
             'show_in_bottom' => 'boolean',
+            'show_in_sidebar' => 'boolean',
         ];
     }
 
