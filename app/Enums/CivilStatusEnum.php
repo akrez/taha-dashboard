@@ -8,4 +8,5 @@ enum CivilStatusEnum
 
     case Civil;
     case NonCivil;
+    case CivilAndNonCivil;
 }

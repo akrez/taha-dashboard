@@ -225,6 +225,7 @@
     "enums.ActivityStatusEnum.Inactive": "غیرفعال",
     "enums.CivilStatusEnum.Civil": "عمرانی",
     "enums.CivilStatusEnum.NonCivil": "غیرعمرانی",
+    "enums.CivilStatusEnum.CivilAndNonCivil": "عمرانی و غیرعمرانی",
     "enums.ProvinceEnum.ALBORZ": "البرز",
     "enums.ProvinceEnum.ARDABIL": "اردبیل",
     "enums.ProvinceEnum.AZERBAIJAN_GHARBI": "آذربایجان غربی",
