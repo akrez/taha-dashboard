@@ -12,6 +12,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     IconButton,
     MenuItem,
     Stack,
@@ -106,10 +107,17 @@ const emptyForm = {
 
 function FormSection({ title, children }) {
     return (
-        <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                {title}
-            </Typography>
+        <Box sx={{ mt: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+                <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    sx={{ fontWeight: 700, whiteSpace: 'nowrap' }}
+                >
+                    {title}
+                </Typography>
+                <Divider sx={{ flexGrow: 1 }} />
+            </Box>
             <Box
                 sx={{
                     display: 'grid',
@@ -411,15 +419,7 @@ export default function ProjectsTable() {
                         </Alert>
                     )}
 
-                    <FormSection title="مشخصات پروژه">
-                        <TextField
-                            fullWidth
-                            required
-                            label="کد داخلی سپهر"
-                            value={form.internal_code}
-                            onChange={setField('internal_code')}
-                            slotProps={{ htmlInput: { maxLength: 8, inputMode: 'numeric' } }}
-                        />
+                    <FormSection title="مشخصات کلی قراردادی">
                         <TextField
                             fullWidth
                             required
@@ -427,6 +427,14 @@ export default function ProjectsTable() {
                             value={form.project_name}
                             onChange={setField('project_name')}
                             slotProps={{ htmlInput: { maxLength: 250 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            required
+                            label="کد داخلی سپهر"
+                            value={form.internal_code}
+                            onChange={setField('internal_code')}
+                            slotProps={{ htmlInput: { maxLength: 8, inputMode: 'numeric' } }}
                         />
                         <TextField
                             fullWidth
@@ -443,9 +451,6 @@ export default function ProjectsTable() {
                             onChange={setField('plan_code')}
                             slotProps={{ htmlInput: { maxLength: 15 } }}
                         />
-                    </FormSection>
-
-                    <FormSection title="اطلاعات سازمانی">
                         <TextField
                             fullWidth
                             label="وزارتخانه"
@@ -455,29 +460,69 @@ export default function ProjectsTable() {
                         />
                         <TextField
                             fullWidth
+                            label="رشته"
+                            value={form.field}
+                            onChange={setField('field')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="گرایش"
+                            value={form.specialization}
+                            onChange={setField('specialization')}
+                            slotProps={{ htmlInput: { maxLength: 20 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="ابعاد پروژه"
+                            type="number"
+                            value={form.project_dimension}
+                            onChange={setField('project_dimension')}
+                            slotProps={{ htmlInput: { step: '0.01', min: 0 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="واحد"
+                            value={form.unit}
+                            onChange={setField('unit')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="کشور"
+                            value={form.country}
+                            onChange={setField('country')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
+                        />
+                        <TextField
+                            fullWidth
                             select
-                            label="کارفرما"
-                            value={form.employer_id}
-                            onChange={setField('employer_id')}
+                            label="استان"
+                            value={form.province}
+                            onChange={setField('province')}
                         >
-                            <MenuItem value="">بدون کارفرما</MenuItem>
-                            {employerChoices.map((employer) => (
-                                <MenuItem key={employer.id} value={employer.id}>
-                                    {employer.name}
-                                    {employer.is_active === false ? ' (غیرفعال)' : ''}
-                                </MenuItem>
+                            <MenuItem value="">انتخاب نشده</MenuItem>
+                            {options.provinces.map((province) => (
+                                <MenuItem key={province.name} value={province.name}>{province.trans}</MenuItem>
                             ))}
                         </TextField>
                         <TextField
                             fullWidth
-                            label="مشاور"
-                            value={form.consultant}
-                            onChange={setField('consultant')}
-                            slotProps={{ htmlInput: { maxLength: 40 } }}
+                            label="شهرستان"
+                            value={form.county}
+                            onChange={setField('county')}
+                            slotProps={{ htmlInput: { maxLength: 15 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="ماهیت"
+                            value={form.nature}
+                            onChange={setField('nature')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
                         />
                     </FormSection>
 
-                    <FormSection title="مبالغ">
+                    <FormSection title="اطلاعات ریالی پروژه">
                         <TextField
                             fullWidth
                             label="مبلغ اولیه (میلیارد ریال)"
@@ -494,6 +539,9 @@ export default function ProjectsTable() {
                             onChange={setField('initial_amount_million_currency')}
                             slotProps={{ htmlInput: { step: '0.01', min: 0 } }}
                         />
+                    </FormSection>
+
+                    <FormSection title="مبلغ قرارداد براساس آخرین الحاقیه">
                         <TextField
                             fullWidth
                             label="مبلغ تجمیع"
@@ -512,7 +560,7 @@ export default function ProjectsTable() {
                         />
                     </FormSection>
 
-                    <FormSection title="اطلاعات زمانی قرارداد (شمسی)">
+                    <FormSection title="اطلاعات زمانی پروژه">
                         <JalaliDatePicker
                             label="تاریخ عقد قرارداد"
                             value={form.contract_date}
@@ -556,21 +604,20 @@ export default function ProjectsTable() {
                         />
                     </FormSection>
 
-                    <FormSection title="ابعاد و شاخص پروژه">
+                    <FormSection title="اطلاعات فنی پروژه">
                         <TextField
                             fullWidth
-                            label="ابعاد پروژه"
-                            type="number"
-                            value={form.project_dimension}
-                            onChange={setField('project_dimension')}
-                            slotProps={{ htmlInput: { step: '0.01', min: 0 } }}
+                            label="نوع پیمان"
+                            value={form.contract_type}
+                            onChange={setField('contract_type')}
+                            slotProps={{ htmlInput: { maxLength: 20 } }}
                         />
                         <TextField
                             fullWidth
-                            label="واحد"
-                            value={form.unit}
-                            onChange={setField('unit')}
-                            slotProps={{ htmlInput: { maxLength: 10 } }}
+                            label="روش اخذ"
+                            value={form.acquisition_method}
+                            onChange={setField('acquisition_method')}
+                            slotProps={{ htmlInput: { maxLength: 15 } }}
                         />
                         <TextField
                             fullWidth
@@ -587,53 +634,19 @@ export default function ProjectsTable() {
                             onChange={setField('base_year')}
                             slotProps={{ htmlInput: { step: '1', min: 0, max: 9999 } }}
                         />
-                    </FormSection>
-
-                    <FormSection title="مشخصات تخصصی">
-                        <TextField
-                            fullWidth
-                            label="رشته"
-                            value={form.field}
-                            onChange={setField('field')}
-                            slotProps={{ htmlInput: { maxLength: 10 } }}
-                        />
-                        <TextField
-                            fullWidth
-                            label="گرایش"
-                            value={form.specialization}
-                            onChange={setField('specialization')}
-                            slotProps={{ htmlInput: { maxLength: 20 } }}
-                        />
-                        <TextField
-                            fullWidth
-                            label="روش اخذ"
-                            value={form.acquisition_method}
-                            onChange={setField('acquisition_method')}
-                            slotProps={{ htmlInput: { maxLength: 15 } }}
-                        />
-                        <TextField
-                            fullWidth
-                            label="ماهیت"
-                            value={form.nature}
-                            onChange={setField('nature')}
-                            slotProps={{ htmlInput: { maxLength: 10 } }}
-                        />
-                    </FormSection>
-
-                    <FormSection title="وضعیت و نوع پروژه">
-                        <TextField
-                            fullWidth
-                            label="کد وضعیت"
-                            value={form.status_code}
-                            onChange={setField('status_code')}
-                            slotProps={{ htmlInput: { maxLength: 10 } }}
-                        />
                         <TextField
                             fullWidth
                             label="نوع پروژه"
                             value={form.project_type}
                             onChange={setField('project_type')}
                             slotProps={{ htmlInput: { maxLength: 20 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="کد وضعیت"
+                            value={form.status_code}
+                            onChange={setField('status_code')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
                         />
                         <TextField
                             fullWidth
@@ -647,13 +660,6 @@ export default function ProjectsTable() {
                             label="وضعیت پروژه"
                             value={form.project_status}
                             onChange={setField('project_status')}
-                            slotProps={{ htmlInput: { maxLength: 20 } }}
-                        />
-                        <TextField
-                            fullWidth
-                            label="نوع پیمان"
-                            value={form.contract_type}
-                            onChange={setField('contract_type')}
                             slotProps={{ htmlInput: { maxLength: 20 } }}
                         />
                         <TextField
@@ -682,32 +688,28 @@ export default function ProjectsTable() {
                         </TextField>
                     </FormSection>
 
-                    <FormSection title="موقعیت جغرافیایی">
-                        <TextField
-                            fullWidth
-                            label="کشور"
-                            value={form.country}
-                            onChange={setField('country')}
-                            slotProps={{ htmlInput: { maxLength: 10 } }}
-                        />
+                    <FormSection title="ذینفعان پروژه">
                         <TextField
                             fullWidth
                             select
-                            label="استان"
-                            value={form.province}
-                            onChange={setField('province')}
+                            label="کارفرما"
+                            value={form.employer_id}
+                            onChange={setField('employer_id')}
                         >
-                            <MenuItem value="">انتخاب نشده</MenuItem>
-                            {options.provinces.map((province) => (
-                                <MenuItem key={province.name} value={province.name}>{province.trans}</MenuItem>
+                            <MenuItem value="">بدون کارفرما</MenuItem>
+                            {employerChoices.map((employer) => (
+                                <MenuItem key={employer.id} value={employer.id}>
+                                    {employer.name}
+                                    {employer.is_active === false ? ' (غیرفعال)' : ''}
+                                </MenuItem>
                             ))}
                         </TextField>
                         <TextField
                             fullWidth
-                            label="شهرستان"
-                            value={form.county}
-                            onChange={setField('county')}
-                            slotProps={{ htmlInput: { maxLength: 15 } }}
+                            label="مشاور"
+                            value={form.consultant}
+                            onChange={setField('consultant')}
+                            slotProps={{ htmlInput: { maxLength: 40 } }}
                         />
                     </FormSection>
                 </DialogContent>
