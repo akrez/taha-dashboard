@@ -75,7 +75,7 @@ return new class extends Migration
 
             // موقعیت جغرافیایی
             $table->string('country', 10)->nullable();
-            $table->string('province', 15)->nullable();
+            $table->string('province', 63)->nullable();
             $table->string('county', 15)->nullable();
 
             // وضعیت فعالیت

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\ActivityStatusEnum;
 use App\Enums\CivilStatusEnum;
+use App\Enums\ProvinceEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Project\StoreProjectRequest;
 use App\Http\Requests\Api\Project\UpdateProjectRequest;
@@ -33,6 +34,7 @@ class ProjectController extends Controller
             ])->values(),
             'civil_statuses' => CivilStatusEnum::collection(),
             'activity_statuses' => ActivityStatusEnum::collection(),
+            'provinces' => ProvinceEnum::collection(),
         ]);
     }
 

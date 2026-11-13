@@ -70,7 +70,8 @@ class ProjectResource extends JsonResource
 
             // موقعیت جغرافیایی
             'country' => $this->country,
-            'province' => $this->province,
+            'province' => $this->province?->name,
+            'province_trans' => $this->province?->trans(),
             'county' => $this->county,
 
             // وضعیت فعالیت

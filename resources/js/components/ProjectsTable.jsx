@@ -134,6 +134,7 @@ export default function ProjectsTable() {
         employers: [],
         civil_statuses: [],
         activity_statuses: [],
+        provinces: [],
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -159,6 +160,7 @@ export default function ProjectsTable() {
                 employers: optionsRes.data.employers ?? [],
                 civil_statuses: optionsRes.data.civil_statuses ?? [],
                 activity_statuses: optionsRes.data.activity_statuses ?? [],
+                provinces: optionsRes.data.provinces ?? [],
             });
             setError('');
         } catch (err) {
@@ -690,11 +692,16 @@ export default function ProjectsTable() {
                         />
                         <TextField
                             fullWidth
+                            select
                             label="استان"
                             value={form.province}
                             onChange={setField('province')}
-                            slotProps={{ htmlInput: { maxLength: 15 } }}
-                        />
+                        >
+                            <MenuItem value="">انتخاب نشده</MenuItem>
+                            {options.provinces.map((province) => (
+                                <MenuItem key={province.name} value={province.name}>{province.trans}</MenuItem>
+                            ))}
+                        </TextField>
                         <TextField
                             fullWidth
                             label="شهرستان"

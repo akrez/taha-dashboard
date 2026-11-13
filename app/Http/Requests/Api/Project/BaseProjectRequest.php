@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Project;
 
 use App\Enums\ActivityStatusEnum;
 use App\Enums\CivilStatusEnum;
+use App\Enums\ProvinceEnum;
 use App\Rules\JalaliDate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -187,7 +188,10 @@ abstract class BaseProjectRequest extends FormRequest
 
             // موقعیت جغرافیایی
             'country' => ['nullable', 'string', 'max:10'],
-            'province' => ['nullable', 'string', 'max:15'],
+            'province' => [
+                'nullable',
+                Rule::in(ProvinceEnum::names()),
+            ],
             'county' => ['nullable', 'string', 'max:15'],
 
             // وضعیت فعالیت
