@@ -46,18 +46,18 @@ class ProjectProvinceTest extends TestCase
     public function test_project_is_stored_with_province_enum_name()
     {
         $response = $this->postJson('/api/projects', $this->payload([
-            'province' => ProvinceEnum::TEHRAN->name,
+            'province' => ProvinceEnum::THR->name,
         ]));
 
         $response->assertCreated();
 
         $project = Project::where('internal_code', '10001234')->firstOrFail();
 
-        $this->assertSame(ProvinceEnum::TEHRAN->name, $project->getRawOriginal('province'));
+        $this->assertSame(ProvinceEnum::THR->name, $project->getRawOriginal('province'));
         $this->assertInstanceOf(ProvinceEnum::class, $project->province);
-        $this->assertSame(ProvinceEnum::TEHRAN, $project->province);
+        $this->assertSame(ProvinceEnum::THR, $project->province);
 
-        $response->assertJsonPath('data.province', ProvinceEnum::TEHRAN->name);
+        $response->assertJsonPath('data.province', ProvinceEnum::THR->name);
         $response->assertJsonPath('data.province_trans', 'تهران');
     }
 
@@ -65,20 +65,20 @@ class ProjectProvinceTest extends TestCase
     {
         $project = Project::factory()->create([
             'internal_code' => '10001234',
-            'province' => ProvinceEnum::TEHRAN->name,
+            'province' => ProvinceEnum::THR->name,
         ]);
 
         $response = $this->putJson("/api/projects/{$project->id}", $this->payload([
-            'province' => ProvinceEnum::ESFAHAN->name,
+            'province' => ProvinceEnum::ESF->name,
         ]));
 
         $response->assertOk();
 
         $project->refresh();
 
-        $this->assertSame(ProvinceEnum::ESFAHAN->name, $project->getRawOriginal('province'));
+        $this->assertSame(ProvinceEnum::ESF->name, $project->getRawOriginal('province'));
 
-        $response->assertJsonPath('data.province', ProvinceEnum::ESFAHAN->name);
+        $response->assertJsonPath('data.province', ProvinceEnum::ESF->name);
         $response->assertJsonPath('data.province_trans', 'اصفهان');
     }
 
@@ -102,7 +102,7 @@ class ProjectProvinceTest extends TestCase
 
         $this->assertCount(count(ProvinceEnum::cases()), $provinces);
         $this->assertSame(
-            ['name' => 'ALBORZ', 'trans' => 'البرز'],
+            ['name' => 'KHZ', 'trans' => 'خوزستان'],
             $provinces[0],
         );
     }

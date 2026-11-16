@@ -2,45 +2,39 @@
 
 namespace App\Enums;
 
-/**
- * استان‌های ایران.
- *
- * عنوان فارسی هر استان از فایل ترجمه `lang/fa.json` با کلید
- * `enums.ProvinceEnum.<NAME>` خوانده می‌شود (روش `trans()`).
- */
 enum ProvinceEnum
 {
     use Enum;
 
-    case ALBORZ;
-    case ARDABIL;
-    case AZERBAIJAN_GHARBI;
-    case AZERBAIJAN_SHARGHI;
-    case BUSHEHR;
-    case CHAHARMAHAL_VA_BAKHTIARI;
-    case ESFAHAN;
-    case FARS;
-    case GILAN;
-    case GOLESTAN;
-    case HAMEDAN;
-    case HORMOZGAN;
-    case ILAM;
-    case KERMAN;
-    case KERMANSHAH;
-    case KHORASAN_JONOOBI;
-    case KHORASAN_RAZAVI;
-    case KHORASAN_SHOMALI;
-    case KHUZESTAN;
-    case KOHGILUYEH_VA_BOYER_AHMAD;
-    case KORDESTAN;
-    case LORESTAN;
-    case MARKAZI;
-    case MAZANDARAN;
-    case QAZVIN;
-    case QOM;
-    case SEMNAN;
-    case SISTAN_VA_BALUCHESTAN;
-    case TEHRAN;
-    case YAZD;
-    case ZANJAN;
+    case KHZ;  // Khuzestan (خوزستان)
+    case THR;  // Tehran (تهران)
+    case ILM;  // Ilam (ایلام)
+    case BHR;  // Bushehr (بوشهر)
+    case ADL;  // Ardabil (اردبیل)
+    case ESF;  // Isfahan (اصفهان)
+    case YZD;  // Yazd (یزد)
+    case KRH;  // Kermanshah (کرمانشاه)
+    case KRN;  // Kerman (کرمان)
+    case HDN;  // Hamadan (همدان)
+    case GZN;  // Qazvin (قزوین)
+    case ZJN;  // Zanjan (زنجان)
+    case LRS;  // Lorestan (لرستان)
+    case ABZ;  // Alborz (البرز)
+    case EAZ;  // East Azarbaijan (آذربایجان شرقی)
+    case WAZ;  // West Azarbaijan (آذربایجان غربی)
+    case CHB;  // Chaharmahal and Bakhtiari (چهارمحال و بختیاری)
+    case SKH;  // South Khorasan (خراسان جنوبی)
+    case RKH;  // Razavi Khorasan (خراسان رضوی)
+    case NKH;  // North Khorasan (خراسان شمالی)
+    case SMN;  // Semnan (سمنان)
+    case FRS;  // Fars (فارس)
+    case QHM;  // Qom (قم)
+    case KRD;  // Kurdistan (کردستان)
+    case KBD;  // Kohgiluyeh and Boyer-Ahmad (کهگیلویه و بویراحمد)
+    case GLS;  // Golestan (گلستان)
+    case GIL;  // Gilan (گیلان)
+    case MZN;  // Mazandaran (مازندران)
+    case MKZ;  // Markazi (مرکزی)
+    case HRZ;  // Hormozgan (هرمزگان)
+    case SBN;  // Sistan and Baluchestan (سیستان و بلوچستان)
 }
