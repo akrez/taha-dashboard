@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('show_in_top')->default(false);
             $table->boolean('show_in_bottom')->default(false);
+            $table->boolean('show_in_sidebar')->default(false);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
