@@ -39,7 +39,7 @@ class ProjectProvinceTest extends TestCase
             'internal_code' => '10001234',
             'project_name' => 'پروژه آزمایشی',
             'contract_number' => 'CT-1001',
-            'activity_status' => ActivityStatusEnum::Active->name,
+            'activity_status' => ActivityStatusEnum::InProgress->name,
         ], $overrides);
     }
 

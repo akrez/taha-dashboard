@@ -292,7 +292,7 @@ class UserImportService
         return [
             'internal_code' => $internalCode,
             'contract_number' => 'CT-'.$internalCode,
-            'activity_status' => ActivityStatusEnum::Active,
+            'activity_status' => ActivityStatusEnum::InProgress,
         ];
     }
 

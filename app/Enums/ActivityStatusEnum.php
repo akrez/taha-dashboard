@@ -6,6 +6,8 @@ enum ActivityStatusEnum
 {
     use Enum;
 
-    case Active;
-    case Inactive;
+    case InProgress;
+    case FinalDelivery;
+    case TemporaryDelivery;
+    case NotDelivered;
 }

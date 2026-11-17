@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Enums\ActivityStatusEnum;
 use App\Enums\CivilStatusEnum;
+use App\Enums\ContractTypeEnum;
+use App\Enums\ProjectGroupEnum;
+use App\Enums\ProjectTypeEnum;
 use App\Enums\ProvinceEnum;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,6 +42,8 @@ class Project extends Model
         'initial_amount_billion_rials',
         'initial_amount_million_currency',
         'aggregate_amount',
+        'aggregate_amount_currency',
+        'currency_type',
         'remaining_amount',
 
         // اطلاعات زمانی قرارداد
@@ -65,6 +70,7 @@ class Project extends Model
         // وضعیت و نوع پروژه و قرارداد
         'status_code',
         'project_type',
+        'project_group',
         'contract_status',
         'project_status',
         'contract_type',
@@ -76,6 +82,9 @@ class Project extends Model
         'country',
         'province',
         'county',
+
+        // آدرس محل اجرای پروژه
+        'project_address',
 
         // وضعیت فعالیت
         'activity_status',
@@ -92,6 +101,7 @@ class Project extends Model
             'initial_amount_billion_rials' => 'decimal:2',
             'initial_amount_million_currency' => 'decimal:2',
             'aggregate_amount' => 'decimal:2',
+            'aggregate_amount_currency' => 'decimal:2',
             'remaining_amount' => 'integer',
             'initial_duration' => 'integer',
             'extended_duration' => 'integer',
@@ -99,6 +109,9 @@ class Project extends Model
             'base_year' => 'integer',
             'is_active' => 'boolean',
             'is_civil' => CivilStatusEnum::class,
+            'project_type' => ProjectTypeEnum::class,
+            'project_group' => ProjectGroupEnum::class,
+            'contract_type' => ContractTypeEnum::class,
             'activity_status' => ActivityStatusEnum::class,
             'province' => ProvinceEnum::class,
         ];

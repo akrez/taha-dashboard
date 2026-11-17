@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\ActivityStatusEnum;
 use App\Enums\CivilStatusEnum;
+use App\Enums\ContractTypeEnum;
+use App\Enums\ProjectGroupEnum;
+use App\Enums\ProjectTypeEnum;
 use App\Enums\ProvinceEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Project\StoreProjectRequest;
@@ -34,6 +37,9 @@ class ProjectController extends Controller
             ])->values(),
             'civil_statuses' => CivilStatusEnum::collection(),
             'activity_statuses' => ActivityStatusEnum::collection(),
+            'project_types' => ProjectTypeEnum::collection(),
+            'contract_types' => ContractTypeEnum::collection(),
+            'project_groups' => ProjectGroupEnum::collection(),
             'provinces' => ProvinceEnum::collection(),
         ]);
     }

@@ -35,6 +35,8 @@ class ProjectResource extends JsonResource
             'initial_amount_billion_rials' => $this->initial_amount_billion_rials,
             'initial_amount_million_currency' => $this->initial_amount_million_currency,
             'aggregate_amount' => $this->aggregate_amount,
+            'aggregate_amount_currency' => $this->aggregate_amount_currency,
+            'currency_type' => $this->currency_type,
             'remaining_amount' => $this->remaining_amount,
 
             // اطلاعات زمانی قرارداد (شمسی، Y-m-d)
@@ -52,6 +54,9 @@ class ProjectResource extends JsonResource
             'base_index' => $this->base_index,
             'base_year' => $this->base_year,
 
+            // آدرس محل اجرای پروژه
+            'project_address' => $this->project_address,
+
             // مشخصات تخصصی
             'field' => $this->field,
             'specialization' => $this->specialization,
@@ -60,10 +65,11 @@ class ProjectResource extends JsonResource
 
             // وضعیت و نوع پروژه و قرارداد
             'status_code' => $this->status_code,
-            'project_type' => $this->project_type,
+            'project_type' => $this->project_type?->name,
+            'project_group' => $this->project_group?->name,
             'contract_status' => $this->contract_status,
             'project_status' => $this->project_status,
-            'contract_type' => $this->contract_type,
+            'contract_type' => $this->contract_type?->name,
 
             // وضعیت عمرانی پروژه
             'is_civil' => $this->is_civil?->name,

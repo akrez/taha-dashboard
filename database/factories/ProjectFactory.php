@@ -24,7 +24,7 @@ class ProjectFactory extends Factory
             ),
             'project_name' => fake()->unique()->words(3, true),
             'contract_number' => fake()->unique()->numerify('CT-#####'),
-            'activity_status' => ActivityStatusEnum::Active,
+            'activity_status' => ActivityStatusEnum::InProgress,
             'is_active' => true,
         ];
     }

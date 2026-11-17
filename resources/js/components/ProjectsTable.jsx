@@ -67,6 +67,8 @@ const emptyForm = {
     initial_amount_billion_rials: '',
     initial_amount_million_currency: '',
     aggregate_amount: '',
+    aggregate_amount_currency: '',
+    currency_type: '',
     remaining_amount: '',
 
     // اطلاعات زمانی
@@ -93,6 +95,7 @@ const emptyForm = {
     // وضعیت پروژه
     status_code: '',
     project_type: '',
+    project_group: '',
     contract_status: '',
     project_status: '',
     contract_type: '',
@@ -103,6 +106,9 @@ const emptyForm = {
     country: '',
     province: '',
     county: '',
+
+    // آدرس محل اجرای پروژه
+    project_address: '',
 };
 
 function FormSection({ title, children }) {
@@ -142,6 +148,9 @@ export default function ProjectsTable() {
         employers: [],
         civil_statuses: [],
         activity_statuses: [],
+        project_types: [],
+        contract_types: [],
+        project_groups: [],
         provinces: [],
     });
     const [loading, setLoading] = useState(true);
@@ -168,6 +177,9 @@ export default function ProjectsTable() {
                 employers: optionsRes.data.employers ?? [],
                 civil_statuses: optionsRes.data.civil_statuses ?? [],
                 activity_statuses: optionsRes.data.activity_statuses ?? [],
+                project_types: optionsRes.data.project_types ?? [],
+                contract_types: optionsRes.data.contract_types ?? [],
+                project_groups: optionsRes.data.project_groups ?? [],
                 provinces: optionsRes.data.provinces ?? [],
             });
             setError('');
@@ -474,7 +486,7 @@ export default function ProjectsTable() {
                         />
                         <TextField
                             fullWidth
-                            label="ابعاد پروژه"
+                            label="حجم طول ابعاد"
                             type="number"
                             value={form.project_dimension}
                             onChange={setField('project_dimension')}
@@ -515,6 +527,13 @@ export default function ProjectsTable() {
                         />
                         <TextField
                             fullWidth
+                            label="آدرس محل اجرای پروژه"
+                            value={form.project_address}
+                            onChange={setField('project_address')}
+                            slotProps={{ htmlInput: { maxLength: 255 } }}
+                        />
+                        <TextField
+                            fullWidth
                             label="ماهیت"
                             value={form.nature}
                             onChange={setField('nature')}
@@ -544,11 +563,26 @@ export default function ProjectsTable() {
                     <FormSection title="مبلغ قرارداد براساس آخرین الحاقیه">
                         <TextField
                             fullWidth
-                            label="مبلغ تجمیع"
+                            label="مبلغ کل اولیه + الحاقیه‌ها (ریال)"
                             type="number"
                             value={form.aggregate_amount}
                             onChange={setField('aggregate_amount')}
                             slotProps={{ htmlInput: { step: '0.01', min: 0 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="مبلغ کل اولیه + الحاقیه‌ها (ارزی)"
+                            type="number"
+                            value={form.aggregate_amount_currency}
+                            onChange={setField('aggregate_amount_currency')}
+                            slotProps={{ htmlInput: { step: '0.01', min: 0 } }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="واحد پول / نوع ارز"
+                            value={form.currency_type}
+                            onChange={setField('currency_type')}
+                            slotProps={{ htmlInput: { maxLength: 10 } }}
                         />
                         <TextField
                             fullWidth
@@ -562,30 +596,30 @@ export default function ProjectsTable() {
 
                     <FormSection title="اطلاعات زمانی پروژه">
                         <JalaliDatePicker
-                            label="تاریخ عقد قرارداد"
+                            label="تاریخ انعقاد قرارداد"
                             value={form.contract_date}
                             onChange={(value) => setForm((current) => ({ ...current, contract_date: value }))}
                         />
                         <JalaliDatePicker
-                            label="تاریخ ابلاغ"
+                            label="تاریخ ابلاغ قرارداد"
                             value={form.notification_date}
                             onChange={(value) => setForm((current) => ({ ...current, notification_date: value }))}
                         />
                         <JalaliDatePicker
-                            label="تاریخ شروع"
+                            label="تاریخ شروع قرارداد"
                             value={form.start_date}
                             onChange={(value) => setForm((current) => ({ ...current, start_date: value }))}
                         />
                         <TextField
                             fullWidth
-                            label="مدت اولیه قرارداد"
+                            label="مدت اولیه قرارداد (ماه)"
                             type="number"
                             value={form.initial_duration}
                             onChange={setField('initial_duration')}
                             slotProps={{ htmlInput: { step: '1', min: 0, max: 65535 } }}
                         />
                         <JalaliDatePicker
-                            label="تاریخ پایان"
+                            label="تاریخ پایان قرارداد اولیه"
                             value={form.end_date}
                             onChange={(value) => setForm((current) => ({ ...current, end_date: value }))}
                         />
@@ -598,7 +632,7 @@ export default function ProjectsTable() {
                             slotProps={{ htmlInput: { step: '1', min: 0, max: 999 } }}
                         />
                         <JalaliDatePicker
-                            label="تاریخ خاتمه تمدید شده"
+                            label="تاریخ پایان قرارداد با احتساب الحاقیه‌ها"
                             value={form.extended_end_date}
                             onChange={(value) => setForm((current) => ({ ...current, extended_end_date: value }))}
                         />
@@ -607,11 +641,16 @@ export default function ProjectsTable() {
                     <FormSection title="اطلاعات فنی پروژه">
                         <TextField
                             fullWidth
-                            label="نوع پیمان"
+                            select
+                            label="نوع قرارداد بر اساس کارفرما"
                             value={form.contract_type}
                             onChange={setField('contract_type')}
-                            slotProps={{ htmlInput: { maxLength: 20 } }}
-                        />
+                        >
+                            <MenuItem value="">انتخاب نشده</MenuItem>
+                            {options.contract_types.map((type) => (
+                                <MenuItem key={type.name} value={type.name}>{type.trans}</MenuItem>
+                            ))}
+                        </TextField>
                         <TextField
                             fullWidth
                             label="روش اخذ"
@@ -636,11 +675,28 @@ export default function ProjectsTable() {
                         />
                         <TextField
                             fullWidth
+                            select
                             label="نوع پروژه"
                             value={form.project_type}
                             onChange={setField('project_type')}
-                            slotProps={{ htmlInput: { maxLength: 20 } }}
-                        />
+                        >
+                            <MenuItem value="">انتخاب نشده</MenuItem>
+                            {options.project_types.map((type) => (
+                                <MenuItem key={type.name} value={type.name}>{type.trans}</MenuItem>
+                            ))}
+                        </TextField>
+                        <TextField
+                            fullWidth
+                            select
+                            label="گروه"
+                            value={form.project_group}
+                            onChange={setField('project_group')}
+                        >
+                            <MenuItem value="">انتخاب نشده</MenuItem>
+                            {options.project_groups.map((group) => (
+                                <MenuItem key={group.name} value={group.name}>{group.trans}</MenuItem>
+                            ))}
+                        </TextField>
                         <TextField
                             fullWidth
                             label="کد وضعیت"
@@ -678,7 +734,7 @@ export default function ProjectsTable() {
                             fullWidth
                             required
                             select
-                            label="وضعیت فعالیت"
+                            label="وضعیت فعالیت قرارداد"
                             value={form.activity_status}
                             onChange={setField('activity_status')}
                         >

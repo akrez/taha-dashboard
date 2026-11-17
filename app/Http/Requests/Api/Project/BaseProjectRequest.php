@@ -4,6 +4,9 @@ namespace App\Http\Requests\Api\Project;
 
 use App\Enums\ActivityStatusEnum;
 use App\Enums\CivilStatusEnum;
+use App\Enums\ContractTypeEnum;
+use App\Enums\ProjectGroupEnum;
+use App\Enums\ProjectTypeEnum;
 use App\Enums\ProvinceEnum;
 use App\Rules\JalaliDate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -115,6 +118,15 @@ abstract class BaseProjectRequest extends FormRequest
                 'decimal:0,2',
             ],
 
+            'aggregate_amount_currency' => [
+                'nullable',
+                'numeric',
+                'between:0,9999999999999.99',
+                'decimal:0,2',
+            ],
+
+            'currency_type' => ['nullable', 'string', 'max:10'],
+
             'remaining_amount' => [
                 'nullable',
                 'integer',
@@ -176,10 +188,20 @@ abstract class BaseProjectRequest extends FormRequest
 
             // وضعیت و نوع پروژه
             'status_code' => ['nullable', 'string', 'max:10'],
-            'project_type' => ['nullable', 'string', 'max:20'],
+            'project_type' => [
+                'nullable',
+                Rule::in(ProjectTypeEnum::names()),
+            ],
+            'project_group' => [
+                'nullable',
+                Rule::in(ProjectGroupEnum::names()),
+            ],
             'contract_status' => ['nullable', 'string', 'max:100'],
             'project_status' => ['nullable', 'string', 'max:20'],
-            'contract_type' => ['nullable', 'string', 'max:20'],
+            'contract_type' => [
+                'nullable',
+                Rule::in(ContractTypeEnum::names()),
+            ],
 
             'is_civil' => [
                 'nullable',
@@ -224,23 +246,28 @@ abstract class BaseProjectRequest extends FormRequest
             // مبالغ
             'initial_amount_billion_rials' => 'مبلغ اولیه (میلیارد ریال)',
             'initial_amount_million_currency' => 'مبلغ اولیه (میلیون ارزی)',
-            'aggregate_amount' => 'مبلغ تجمیع',
+            'aggregate_amount' => 'مبلغ کل اولیه + الحاقیه‌ها (ریال)',
+            'aggregate_amount_currency' => 'مبلغ کل اولیه + الحاقیه‌ها (ارزی)',
+            'currency_type' => 'واحد پول / نوع ارز',
             'remaining_amount' => 'مبلغ مانده',
 
             // اطلاعات زمانی
-            'contract_date' => 'تاریخ عقد قرارداد',
-            'notification_date' => 'تاریخ ابلاغ',
-            'start_date' => 'تاریخ شروع',
-            'initial_duration' => 'مدت اولیه قرارداد',
-            'end_date' => 'تاریخ پایان',
+            'contract_date' => 'تاریخ انعقاد قرارداد',
+            'notification_date' => 'تاریخ ابلاغ قرارداد',
+            'start_date' => 'تاریخ شروع قرارداد',
+            'initial_duration' => 'مدت اولیه قرارداد (ماه)',
+            'end_date' => 'تاریخ پایان قرارداد اولیه',
             'extended_duration' => 'مدت تمدید شده',
-            'extended_end_date' => 'تاریخ خاتمه تمدید شده',
+            'extended_end_date' => 'تاریخ پایان قرارداد با احتساب الحاقیه‌ها',
 
             // ابعاد و شاخص
-            'project_dimension' => 'ابعاد پروژه',
+            'project_dimension' => 'حجم طول ابعاد',
             'unit' => 'واحد',
             'base_index' => 'شاخص مبنا',
             'base_year' => 'سال مبنا',
+
+            // آدرس محل اجرای پروژه
+            'project_address' => 'آدرس محل اجرای پروژه',
 
             // مشخصات تخصصی
             'field' => 'رشته',
@@ -251,9 +278,10 @@ abstract class BaseProjectRequest extends FormRequest
             // وضعیت پروژه
             'status_code' => 'کد وضعیت',
             'project_type' => 'نوع پروژه',
+            'project_group' => 'گروه',
             'contract_status' => 'وضعیت قرارداد',
             'project_status' => 'وضعیت پروژه',
-            'contract_type' => 'نوع پیمان',
+            'contract_type' => 'نوع قرارداد بر اساس کارفرما',
             'is_civil' => 'وضعیت عمرانی پروژه',
 
             // موقعیت جغرافیایی
@@ -262,7 +290,7 @@ abstract class BaseProjectRequest extends FormRequest
             'county' => 'شهرستان',
 
             // وضعیت فعالیت
-            'activity_status' => 'وضعیت فعالیت',
+            'activity_status' => 'وضعیت فعالیت قرارداد',
 
             // وضعیت پروژه در سیستم
             'is_active' => 'وضعیت پروژه در سیستم',
