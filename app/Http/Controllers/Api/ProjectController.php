@@ -44,6 +44,11 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function show(Project $project): ProjectResource
+    {
+        return new ProjectResource($project->load('employer'));
+    }
+
     public function store(StoreProjectRequest $request, ProjectService $projects): JsonResponse
     {
         $project = $projects->create($request->validated());

@@ -15,7 +15,7 @@ function toEnglishDigits(value) {
     );
 }
 
-export default function JalaliDatePicker({ label, value, onChange }) {
+export default function JalaliDatePicker({ label, value, onChange, size = 'small' }) {
     return (
         <DatePicker
             value={value || ''}
@@ -27,6 +27,7 @@ export default function JalaliDatePicker({ label, value, onChange }) {
             editable={false}
             render={(formattedValue, openCalendar) => (
                 <MuiTextField
+                    size={size}
                     fullWidth
                     label={label}
                     value={formattedValue}

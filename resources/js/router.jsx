@@ -4,6 +4,8 @@ import EmployersTable from './components/EmployersTable';
 import { RequireAnyPermission, RequireAuth, RequirePermission, RequireSuperAdmin } from './components/Guards';
 import HomeIndex from './components/HomeIndex';
 import LinksTable from './components/LinksTable';
+import ProjectAddendaPage from './components/ProjectAddendaPage';
+import ProjectFormPage from './components/ProjectFormPage';
 import ProjectsTable from './components/ProjectsTable';
 import RolesTable from './components/RolesTable';
 import SlidesTable from './components/SlidesTable';
@@ -66,6 +68,36 @@ export default function AppRoutes() {
                             <RequireAuth>
                                 <RequirePermission permission="Project">
                                     <ProjectsTable />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="projects/create"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Project">
+                                    <ProjectFormPage />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="projects/:id/edit"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Project">
+                                    <ProjectFormPage />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="projects/:id/addenda"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Project">
+                                    <ProjectAddendaPage />
                                 </RequirePermission>
                             </RequireAuth>
                         }

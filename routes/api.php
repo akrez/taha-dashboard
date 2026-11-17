@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PermissionEnum;
+use App\Http\Controllers\Api\AddendumController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmployerController;
 use App\Http\Controllers\Api\HomeController;
@@ -40,9 +41,15 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware(['permission:'.PermissionEnum::Project->name])->group(function () {
         Route::get('/projects', [ProjectController::class, 'index']);
         Route::get('/projects/options', [ProjectController::class, 'options']);
+        Route::get('/projects/{project}', [ProjectController::class, 'show']);
         Route::post('/projects', [ProjectController::class, 'store']);
         Route::put('/projects/{project}', [ProjectController::class, 'update']);
         Route::patch('/projects/{project}/system-status', [ProjectController::class, 'updateSystemStatus']);
+
+        Route::get('/projects/{project}/addenda', [AddendumController::class, 'index']);
+        Route::post('/projects/{project}/addenda', [AddendumController::class, 'store']);
+        Route::put('/addenda/{addendum}', [AddendumController::class, 'update']);
+        Route::delete('/addenda/{addendum}', [AddendumController::class, 'destroy']);
     });
     Route::middleware(['role:'.RbacService::superAdminRoleName()])->group(function () {
         Route::post('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');

@@ -39,21 +39,21 @@ class Project extends Model
         'consultant',
 
         // مبالغ
-        'initial_amount_billion_rials',
-        'initial_amount_million_currency',
-        'aggregate_amount',
+        'initial_amount_rials',
+        'initial_amount_currency',
+        'aggregate_amount_rials',
         'aggregate_amount_currency',
-        'currency_type',
+        'currency_unit',
         'remaining_amount',
 
         // اطلاعات زمانی قرارداد
         'contract_date',
         'notification_date',
-        'start_date',
-        'initial_duration',
-        'end_date',
-        'extended_duration',
-        'extended_end_date',
+        'project_start_date',
+        'initial_contract_duration',
+        'contract_end_date',
+        'extended_contract_duration',
+        'extended_contract_end_date',
 
         // ابعاد و شاخص پروژه
         'project_dimension',
@@ -84,7 +84,7 @@ class Project extends Model
         'county',
 
         // آدرس محل اجرای پروژه
-        'project_address',
+        'workshop_address',
 
         // وضعیت فعالیت
         'activity_status',
@@ -98,13 +98,13 @@ class Project extends Model
     protected function casts(): array
     {
         return [
-            'initial_amount_billion_rials' => 'decimal:2',
-            'initial_amount_million_currency' => 'decimal:2',
-            'aggregate_amount' => 'decimal:2',
-            'aggregate_amount_currency' => 'decimal:2',
+            'initial_amount_rials' => 'integer',
+            'initial_amount_currency' => 'integer',
+            'aggregate_amount_rials' => 'integer',
+            'aggregate_amount_currency' => 'integer',
             'remaining_amount' => 'integer',
-            'initial_duration' => 'integer',
-            'extended_duration' => 'integer',
+            'initial_contract_duration' => 'integer',
+            'extended_contract_duration' => 'integer',
             'project_dimension' => 'decimal:2',
             'base_year' => 'integer',
             'is_active' => 'boolean',
@@ -120,6 +120,11 @@ class Project extends Model
     public function employer(): BelongsTo
     {
         return $this->belongsTo(Employer::class);
+    }
+
+    public function addenda(): HasMany
+    {
+        return $this->hasMany(Addendum::class);
     }
 
     public function users(): HasMany

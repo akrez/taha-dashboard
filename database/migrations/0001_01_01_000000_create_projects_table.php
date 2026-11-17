@@ -22,22 +22,22 @@ return new class extends Migration
             $table->foreignId('employer_id')->nullable()->index()->constrained()->nullOnDelete();
             $table->string('consultant', 40)->nullable();
 
-            // مبالغ
-            $table->decimal('initial_amount_billion_rials', 15, 2)->nullable();
-            $table->decimal('initial_amount_million_currency', 15, 2)->nullable();
-            $table->decimal('aggregate_amount', 15, 2)->nullable();
-            $table->decimal('aggregate_amount_currency', 15, 2)->nullable();
-            $table->string('currency_type', 10)->nullable();
+            // مبالغ (ریال / ارزی) — عدد صحیح بدون اعشار
+            $table->unsignedBigInteger('initial_amount_rials')->nullable();
+            $table->unsignedBigInteger('initial_amount_currency')->nullable();
+            $table->unsignedBigInteger('aggregate_amount_rials')->nullable();
+            $table->unsignedBigInteger('aggregate_amount_currency')->nullable();
+            $table->string('currency_unit', 10)->nullable();
             $table->unsignedBigInteger('remaining_amount')->nullable();
 
             // اطلاعات زمانی قرارداد (شمسی، Y-m-d)
             $table->string('contract_date', 10)->nullable();
             $table->string('notification_date', 10)->nullable();
-            $table->string('start_date', 10)->nullable();
-            $table->unsignedSmallInteger('initial_duration')->nullable();
-            $table->string('end_date', 10)->nullable();
-            $table->unsignedSmallInteger('extended_duration')->nullable();
-            $table->string('extended_end_date', 10)->nullable();
+            $table->string('project_start_date', 10)->nullable();
+            $table->unsignedSmallInteger('initial_contract_duration')->nullable();
+            $table->string('contract_end_date', 10)->nullable();
+            $table->unsignedSmallInteger('extended_contract_duration')->nullable();
+            $table->string('extended_contract_end_date', 10)->nullable();
 
             // ابعاد و شاخص پروژه (حجم طول ابعاد)
             $table->decimal('project_dimension', 11, 2)->nullable()->comment('حجم طول ابعاد');
@@ -67,8 +67,8 @@ return new class extends Migration
             $table->string('province', 63)->nullable();
             $table->string('county', 15)->nullable();
 
-            // آدرس محل اجرای پروژه
-            $table->string('project_address', 255)->nullable();
+            // آدرس کارگاه
+            $table->string('workshop_address', 255)->nullable();
 
             // وضعیت فعالیت
             $table->string('activity_status', 10)->nullable();
@@ -82,10 +82,30 @@ return new class extends Migration
             $table->index('project_name');
             $table->index(['activity_status', 'is_civil']);
         });
+
+        Schema::create('addenda', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
+
+            // شماره الحاقیه
+            $table->unsignedSmallInteger('number');
+
+            // مدت الحاقیه (ماه)
+            $table->unsignedSmallInteger('duration')->nullable();
+
+            // مبلغ الحاقیه (ریال / ارزی) — عدد صحیح بدون اعشار
+            $table->unsignedBigInteger('amount_rials')->nullable();
+            $table->unsignedBigInteger('amount_currency')->nullable();
+
+            $table->timestamps();
+
+            $table->unique(['project_id', 'number']);
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('addenda');
         Schema::dropIfExists('projects');
     }
 };

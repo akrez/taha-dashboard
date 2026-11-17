@@ -32,21 +32,21 @@ class ProjectResource extends JsonResource
             ] : null),
 
             // مبالغ
-            'initial_amount_billion_rials' => $this->initial_amount_billion_rials,
-            'initial_amount_million_currency' => $this->initial_amount_million_currency,
-            'aggregate_amount' => $this->aggregate_amount,
+            'initial_amount_rials' => $this->initial_amount_rials,
+            'initial_amount_currency' => $this->initial_amount_currency,
+            'aggregate_amount_rials' => $this->aggregate_amount_rials,
             'aggregate_amount_currency' => $this->aggregate_amount_currency,
-            'currency_type' => $this->currency_type,
+            'currency_unit' => $this->currency_unit,
             'remaining_amount' => $this->remaining_amount,
 
             // اطلاعات زمانی قرارداد (شمسی، Y-m-d)
             'contract_date' => $this->contract_date,
             'notification_date' => $this->notification_date,
-            'start_date' => $this->start_date,
-            'initial_duration' => $this->initial_duration,
-            'end_date' => $this->end_date,
-            'extended_duration' => $this->extended_duration,
-            'extended_end_date' => $this->extended_end_date,
+            'project_start_date' => $this->project_start_date,
+            'initial_contract_duration' => $this->initial_contract_duration,
+            'contract_end_date' => $this->contract_end_date,
+            'extended_contract_duration' => $this->extended_contract_duration,
+            'extended_contract_end_date' => $this->extended_contract_end_date,
 
             // ابعاد و شاخص پروژه
             'project_dimension' => $this->project_dimension,
@@ -55,7 +55,7 @@ class ProjectResource extends JsonResource
             'base_year' => $this->base_year,
 
             // آدرس محل اجرای پروژه
-            'project_address' => $this->project_address,
+            'workshop_address' => $this->workshop_address,
 
             // مشخصات تخصصی
             'field' => $this->field,

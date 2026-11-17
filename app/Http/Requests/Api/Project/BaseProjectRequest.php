@@ -22,9 +22,9 @@ abstract class BaseProjectRequest extends FormRequest
     private const DATE_FIELDS = [
         'contract_date',
         'notification_date',
-        'start_date',
-        'end_date',
-        'extended_end_date',
+        'project_start_date',
+        'contract_end_date',
+        'extended_contract_end_date',
     ];
 
     /**
@@ -63,6 +63,21 @@ abstract class BaseProjectRequest extends FormRequest
     }
 
     /**
+     * مبالغ ریالی/ارزی به‌صورت عدد صحیح (بدون اعشار) ذخیره می‌شوند.
+     *
+     * @return list<string>
+     */
+    protected function amountRules(): array
+    {
+        return [
+            'nullable',
+            'integer',
+            'min:0',
+            'max:999999999999999',
+        ];
+    }
+
+    /**
      * قواعد مشترک ایجاد و ویرایش پروژه؛ فقط یکتایی «کد داخلی سپهر» بین این دو متفاوت است.
      *
      * @return array<string, mixed>
@@ -96,71 +111,46 @@ abstract class BaseProjectRequest extends FormRequest
                 'exists:employers,id',
             ],
 
-            // مبالغ
-            'initial_amount_billion_rials' => [
-                'nullable',
-                'numeric',
-                'between:0,9999999999999.99',
-                'decimal:0,2',
-            ],
+            // مبالغ (عدد صحیح بدون اعشار)
+            'initial_amount_rials' => $this->amountRules(),
 
-            'initial_amount_million_currency' => [
-                'nullable',
-                'numeric',
-                'between:0,9999999999999.99',
-                'decimal:0,2',
-            ],
+            'initial_amount_currency' => $this->amountRules(),
 
-            'aggregate_amount' => [
-                'nullable',
-                'numeric',
-                'between:0,9999999999999.99',
-                'decimal:0,2',
-            ],
+            'aggregate_amount_rials' => $this->amountRules(),
 
-            'aggregate_amount_currency' => [
-                'nullable',
-                'numeric',
-                'between:0,9999999999999.99',
-                'decimal:0,2',
-            ],
+            'aggregate_amount_currency' => $this->amountRules(),
 
-            'currency_type' => ['nullable', 'string', 'max:10'],
+            'currency_unit' => ['nullable', 'string', 'max:10'],
 
-            'remaining_amount' => [
-                'nullable',
-                'integer',
-                'min:0',
-                'max:9999999999',
-            ],
+            'remaining_amount' => $this->amountRules(),
 
             // اطلاعات زمانی (شمسی، Y-m-d)
             'contract_date' => ['nullable', new JalaliDate],
             'notification_date' => ['nullable', new JalaliDate],
-            'start_date' => ['nullable', new JalaliDate],
+            'project_start_date' => ['nullable', new JalaliDate],
 
-            'initial_duration' => [
+            'initial_contract_duration' => [
                 'nullable',
                 'integer',
                 'min:0',
                 'max:65535',
             ],
 
-            'end_date' => [
+            'contract_end_date' => [
                 'nullable',
-                new JalaliDate('start_date', 'تاریخ شروع'),
+                new JalaliDate('project_start_date', 'تاریخ شروع'),
             ],
 
-            'extended_duration' => [
+            'extended_contract_duration' => [
                 'nullable',
                 'integer',
                 'min:0',
                 'max:999',
             ],
 
-            'extended_end_date' => [
+            'extended_contract_end_date' => [
                 'nullable',
-                new JalaliDate('end_date', 'تاریخ پایان'),
+                new JalaliDate('contract_end_date', 'تاریخ پایان'),
             ],
 
             // ابعاد و شاخص پروژه
@@ -232,64 +222,58 @@ abstract class BaseProjectRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            // مشخصات پروژه
+            // مشخصات کلی قراردادی
             'internal_code' => 'کد داخلی سپهر',
-            'project_name' => 'نام پروژه',
+            'project_name' => 'پروژه',
             'contract_number' => 'شماره قرارداد',
             'plan_code' => 'کد طرح',
-
-            // اطلاعات سازمانی
-            'ministry' => 'وزارتخانه',
-            'employer_id' => 'کارفرما',
-            'consultant' => 'مشاور',
-
-            // مبالغ
-            'initial_amount_billion_rials' => 'مبلغ اولیه (میلیارد ریال)',
-            'initial_amount_million_currency' => 'مبلغ اولیه (میلیون ارزی)',
-            'aggregate_amount' => 'مبلغ کل اولیه + الحاقیه‌ها (ریال)',
-            'aggregate_amount_currency' => 'مبلغ کل اولیه + الحاقیه‌ها (ارزی)',
-            'currency_type' => 'واحد پول / نوع ارز',
-            'remaining_amount' => 'مبلغ مانده',
-
-            // اطلاعات زمانی
-            'contract_date' => 'تاریخ انعقاد قرارداد',
-            'notification_date' => 'تاریخ ابلاغ قرارداد',
-            'start_date' => 'تاریخ شروع قرارداد',
-            'initial_duration' => 'مدت اولیه قرارداد (ماه)',
-            'end_date' => 'تاریخ پایان قرارداد اولیه',
-            'extended_duration' => 'مدت تمدید شده',
-            'extended_end_date' => 'تاریخ پایان قرارداد با احتساب الحاقیه‌ها',
-
-            // ابعاد و شاخص
-            'project_dimension' => 'حجم طول ابعاد',
-            'unit' => 'واحد',
-            'base_index' => 'شاخص مبنا',
-            'base_year' => 'سال مبنا',
-
-            // آدرس محل اجرای پروژه
-            'project_address' => 'آدرس محل اجرای پروژه',
-
-            // مشخصات تخصصی
             'field' => 'رشته',
             'specialization' => 'گرایش',
-            'acquisition_method' => 'روش اخذ',
-            'nature' => 'ماهیت',
-
-            // وضعیت پروژه
-            'status_code' => 'کد وضعیت',
-            'project_type' => 'نوع پروژه',
-            'project_group' => 'گروه',
-            'contract_status' => 'وضعیت قرارداد',
-            'project_status' => 'وضعیت پروژه',
-            'contract_type' => 'نوع قرارداد بر اساس کارفرما',
-            'is_civil' => 'وضعیت عمرانی پروژه',
-
-            // موقعیت جغرافیایی
+            'project_dimension' => 'حجم / طول / ابعاد پروژه',
+            'unit' => 'واحد',
             'country' => 'کشور',
             'province' => 'استان',
             'county' => 'شهرستان',
+            'nature' => 'ماهیت',
 
-            // وضعیت فعالیت
+            // اطلاعات ریالی پروژه
+            'initial_amount_rials' => 'مبلغ اولیه ریالی',
+            'initial_amount_currency' => 'مبلغ اولیه ارزی',
+            'currency_unit' => 'واحد ارزی',
+            'remaining_amount' => 'مبلغ مانده',
+
+            // مبلغ قرارداد براساس آخرین الحاقیه
+            'aggregate_amount_rials' => 'مبلغ قرارداد ریالی',
+            'aggregate_amount_currency' => 'مبلغ قرارداد ارزی',
+
+            // اطلاعات زمانی پروژه
+            'contract_date' => 'تاریخ انعقاد قرارداد',
+            'notification_date' => 'تاریخ ابلاغ قرارداد',
+            'project_start_date' => 'تاریخ شروع پروژه',
+            'initial_contract_duration' => 'مدت پیمان اولیه به ماه',
+            'contract_end_date' => 'تاریخ خاتمه پیمان',
+            'extended_contract_duration' => 'مدت پیمان تمدید شده به ماه',
+            'extended_contract_end_date' => 'تاریخ خاتمه پس از تمدید',
+
+            // اطلاعات فنی پروژه
+            'contract_type' => 'نوع پیمان',
+            'acquisition_method' => 'نحوه اخذ',
+            'status_code' => 'شناسه وضعیت',
+            'base_index' => 'شاخص مبنا',
+            'base_year' => 'سال مبنا',
+            'project_type' => 'نوع پروژه',
+            'project_group' => 'گروه پروژه',
+
+            // ذینفعان پروژه
+            'ministry' => 'وزارتخانه',
+            'employer_id' => 'کارفرما',
+            'consultant' => 'مشاور',
+            'workshop_address' => 'آدرس کارگاه',
+
+            // سایر
+            'contract_status' => 'وضعیت قرارداد',
+            'project_status' => 'وضعیت پروژه',
+            'is_civil' => 'وضعیت عمرانی پروژه',
             'activity_status' => 'وضعیت فعالیت قرارداد',
 
             // وضعیت پروژه در سیستم

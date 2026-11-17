@@ -82,6 +82,41 @@ class ProjectProvinceTest extends TestCase
         $response->assertJsonPath('data.province_trans', 'اصفهان');
     }
 
+    public function test_project_amounts_are_stored_as_integers()
+    {
+        $response = $this->postJson('/api/projects', $this->payload([
+            'internal_code' => '10001235',
+            'initial_amount_rials' => 999999999999999,
+            'initial_amount_currency' => 1000,
+            'aggregate_amount_rials' => 999999999999999,
+            'aggregate_amount_currency' => 2000,
+            'remaining_amount' => 500,
+        ]));
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.initial_amount_rials', 999999999999999);
+
+        $project = Project::where('internal_code', '10001235')->firstOrFail();
+
+        $this->assertSame(999999999999999, $project->initial_amount_rials);
+        $this->assertIsInt($project->aggregate_amount_rials);
+    }
+
+    public function test_project_amount_rejects_decimals()
+    {
+        $response = $this->postJson('/api/projects', $this->payload([
+            'internal_code' => '10001236',
+            'initial_amount_rials' => 1500.5,
+            'aggregate_amount_rials' => 2000.75,
+        ]));
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'initial_amount_rials',
+            'aggregate_amount_rials',
+        ]);
+    }
+
     public function test_unknown_province_is_rejected()
     {
         $response = $this->postJson('/api/projects', $this->payload([
