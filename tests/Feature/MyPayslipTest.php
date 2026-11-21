@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Payslip;
 use App\Models\PayslipUpload;
+use App\Models\Position;
 use App\Models\User;
 use App\Services\PayslipService;
 use App\Support\PayslipFields;
@@ -26,12 +27,15 @@ class MyPayslipTest extends TestCase
 
     public function test_worker_only_sees_own_payslips_from_active_periods(): void
     {
+        $position = Position::query()->create(['name' => 'کارشناس']);
+
         $worker = User::query()->create([
             'national_code' => '1000000001',
             'first_name' => 'کارمند',
             'last_name' => 'یک',
             'password' => 'password',
             'is_disable' => false,
+            'position_id' => $position->id,
         ]);
         $other = User::query()->create([
             'national_code' => '1000000002',
@@ -52,18 +56,26 @@ class MyPayslipTest extends TestCase
             'is_active' => false,
         ]);
 
-        $ownActive = $this->makePayslip($active, $worker, ['خالص پرداختی' => '9,500,000']);
+        $ownActive = $this->makePayslip($active, $worker, [
+            'خالص پرداختی' => '9,500,000',
+            'گروه' => 'گروه الف',
+            'محل خدمت' => 'ستاد',
+        ]);
         $this->makePayslip($inactive, $worker, ['خالص پرداختی' => '1,000']);
         $this->makePayslip($active, $other, ['خالص پرداختی' => '2,000']);
 
         $response = $this->actingAs($worker, 'api')
-            ->getJson('/api/my-payslips')
+            ->getJson('/api/payslips/mine')
             ->assertStatus(200)
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $ownActive->id)
             ->assertJsonPath('data.0.year', 1405)
             ->assertJsonPath('data.0.month', 8)
-            ->assertJsonPath('data.0.net_pay', '9,500,000');
+            ->assertJsonPath('data.0.position', 'کارشناس')
+            ->assertJsonPath('data.0.group', 'گروه الف')
+            ->assertJsonPath('data.0.workplace', 'ستاد')
+            ->assertJsonMissingPath('data.0.net_pay')
+            ->assertJsonMissingPath('data.0.uploaded_at');
 
         $this->assertSame(1, count($response->json('data')));
     }
@@ -86,7 +98,7 @@ class MyPayslipTest extends TestCase
         }
 
         $months = collect(
-            $this->actingAs($worker, 'api')->getJson('/api/my-payslips')->json('data'),
+            $this->actingAs($worker, 'api')->getJson('/api/payslips/mine')->json('data'),
         )->pluck('month')->all();
 
         $this->assertSame([8, 7, 5], $months);
@@ -114,7 +126,7 @@ class MyPayslipTest extends TestCase
         ]);
 
         $this->actingAs($worker, 'api')
-            ->getJson("/api/my-payslips/{$payslip->id}")
+            ->getJson("/api/payslips/mine/{$payslip->id}")
             ->assertStatus(200)
             ->assertJsonPath('data.year', 1405)
             ->assertJsonPath('data.month', 8)
@@ -146,7 +158,7 @@ class MyPayslipTest extends TestCase
         $payslip = $this->makePayslip($upload, $other);
 
         $this->actingAs($worker, 'api')
-            ->getJson("/api/my-payslips/{$payslip->id}")
+            ->getJson("/api/payslips/mine/{$payslip->id}")
             ->assertStatus(404);
     }
 
@@ -167,13 +179,13 @@ class MyPayslipTest extends TestCase
         $payslip = $this->makePayslip($upload, $worker);
 
         $this->actingAs($worker, 'api')
-            ->getJson("/api/my-payslips/{$payslip->id}")
+            ->getJson("/api/payslips/mine/{$payslip->id}")
             ->assertStatus(404);
     }
 
     public function test_unauthenticated_user_cannot_access_my_payslips(): void
     {
-        $this->getJson('/api/my-payslips')->assertStatus(401);
+        $this->getJson('/api/payslips/mine')->assertStatus(401);
     }
 
     public function test_service_returns_empty_collection_for_unmatched_codes(): void

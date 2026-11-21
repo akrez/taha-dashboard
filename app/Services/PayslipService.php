@@ -87,7 +87,7 @@ class PayslipService
             ->whereHas('upload', function ($query) {
                 $query->where('is_active', true);
             })
-            ->with('upload')
+            ->with(['upload', 'user.position'])
             ->get()
             ->sortByDesc(fn (Payslip $payslip) => (($payslip->upload?->year ?? 0) * 100) + ($payslip->upload?->month ?? 0))
             ->values();

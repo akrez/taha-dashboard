@@ -54,7 +54,7 @@ const navItems = [
     { key: 'projects', label: 'پروژه‌ها', path: '/projects', icon: <ProjectsIcon />, permission: 'Project' },
     { key: 'users', label: 'کاربران', path: '/users', icon: <UsersIcon />, permissions: ['UserManager', 'UserIndex'] },
     { key: 'payslips', label: 'فیش‌های حقوقی', path: '/payslips', icon: <PayslipIcon />, permission: 'Payslip' },
-    { key: 'my-payslips', label: 'فیش حقوقی من', path: '/my-payslips', icon: <MyPayslipIcon />, authOnly: true },
+    { key: 'my-payslips', label: 'فیش حقوقی من', path: '/payslips/mine', icon: <MyPayslipIcon />, authOnly: true },
     { key: 'roles', label: 'نقش‌ها', path: '/roles', icon: <RolesIcon />, superAdmin: true },
 ];
 

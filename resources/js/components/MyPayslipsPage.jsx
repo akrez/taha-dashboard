@@ -3,21 +3,16 @@ import axios from 'axios';
 import {
     Alert,
     Box,
-    Button,
     Card,
     CardContent,
-    Chip,
     CircularProgress,
     Divider,
     Stack,
     Typography,
 } from '@mui/material';
 import { ReceiptLong as ReceiptIcon } from '@mui/icons-material';
-import { formatJalaliDateTime, formatJalaliPeriod, toPersianDigits } from '../jalali';
-import { formatPayslipValue } from '../payslipFields';
-import MyPayslipDialog from './MyPayslipDialog';
-
-const NET_PAY_FIELD = { money: true };
+import { formatJalaliPeriod, toPersianDigits } from '../jalali';
+import PayslipDetailsDialog from './PayslipDetailsDialog';
 
 function apiErrors(error, fallback = 'خطایی رخ داد.') {
     const errors = error.response?.data?.errors;
@@ -31,6 +26,36 @@ function apiErrors(error, fallback = 'خطایی رخ داد.') {
     }
 
     return [error.response?.data?.message ?? fallback];
+}
+
+function InfoRow({ label, value }) {
+    const text = value === null || value === undefined || value === '' ? '—' : toPersianDigits(value);
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'baseline',
+                justifyContent: 'space-between',
+                gap: 2,
+                py: 0.5,
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                '&:last-of-type': { borderBottom: 0 },
+            }}
+        >
+            <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
+                {label}
+            </Typography>
+            <Typography
+                variant="body2"
+                fontWeight={600}
+                sx={{ wordBreak: 'break-word', textAlign: 'left' }}
+            >
+                {text}
+            </Typography>
+        </Box>
+    );
 }
 
 export default function MyPayslipsPage() {
@@ -48,7 +73,7 @@ export default function MyPayslipsPage() {
         setLoading(true);
 
         try {
-            const response = await axios.get('/api/my-payslips');
+            const response = await axios.get('/api/payslips/mine');
             setPayslips(response.data.data ?? []);
             setError([]);
         } catch (err) {
@@ -70,7 +95,7 @@ export default function MyPayslipsPage() {
         setDetailPeriod(formatJalaliPeriod(item.year, item.month));
 
         try {
-            const response = await axios.get(`/api/my-payslips/${item.id}`);
+            const response = await axios.get(`/api/payslips/mine/${item.id}`);
             setDetailPayslip(response.data.data);
         } catch (err) {
             setDetailErrors(apiErrors(err, 'دریافت فیش حقوقی ناموفق بود.'));
@@ -91,7 +116,7 @@ export default function MyPayslipsPage() {
                 <Box sx={{ mb: 2 }}>
                     <Typography variant="h6">فیش حقوقی من</Typography>
                     <Typography variant="caption" color="text.secondary">
-                        فیش‌های حقوقی منتشرشدهٔ شما به تفکیک دوره.
+                        فیش‌های حقوقی شما به تفکیک دوره. برای مشاهده روی هر کارت کلیک کنید.
                     </Typography>
                 </Box>
 
@@ -160,38 +185,19 @@ export default function MyPayslipsPage() {
                                 onClick={() => openPayslip(item)}
                             >
                                 <CardContent>
-                                    <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1}>
+                                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                        <ReceiptIcon fontSize="small" color="action" />
                                         <Typography variant="subtitle1" fontWeight={700}>
                                             {formatJalaliPeriod(item.year, item.month)}
                                         </Typography>
-                                        <Chip size="small" color="success" variant="outlined" label="منتشرشده" />
                                     </Stack>
 
                                     <Divider sx={{ my: 1.25 }} />
 
-                                    <Typography variant="caption" color="text.secondary">
-                                        خالص پرداختی
-                                    </Typography>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{ fontVariantNumeric: 'tabular-nums', mt: 0.25 }}
-                                    >
-                                        {item.net_pay === '' || item.net_pay === null
-                                            ? '—'
-                                            : formatPayslipValue(NET_PAY_FIELD, item.net_pay)}
-                                    </Typography>
-
-                                    <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                        gap={1}
-                                        sx={{ mt: 1.5 }}
-                                    >
-                                        <Typography variant="caption" color="text.secondary">
-                                            {formatJalaliDateTime(item.uploaded_at) || '—'}
-                                        </Typography>
-                                        <Button size="small">مشاهدهٔ فیش</Button>
+                                    <Stack spacing={0.75}>
+                                        <InfoRow label="سمت" value={item.position} />
+                                        <InfoRow label="گروه" value={item.group} />
+                                        <InfoRow label="محل خدمت" value={item.workplace} />
                                     </Stack>
                                 </CardContent>
                             </Card>
@@ -200,13 +206,15 @@ export default function MyPayslipsPage() {
                 )}
             </CardContent>
 
-            <MyPayslipDialog
+            <PayslipDetailsDialog
                 open={detailOpen}
                 onClose={closePayslip}
                 payslip={detailPayslip}
                 loading={detailLoading}
                 errors={detailErrors}
                 periodLabel={detailPeriod}
+                title="فیش حقوقی من"
+                showLinkStatus={false}
             />
         </Card>
     );

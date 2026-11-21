@@ -1,19 +1,17 @@
 import {
     Alert,
     Box,
-    Button,
     Chip,
     CircularProgress,
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
-    Divider,
+    IconButton,
     Stack,
     Typography,
 } from '@mui/material';
-import { toPersianDigits } from '../jalali';
-import PayslipFieldsView from './PayslipFieldsView';
+import { Close as CloseIcon } from '@mui/icons-material';
+import PayslipDocument from './PayslipDocument';
 
 export default function PayslipDetailsDialog({
     open,
@@ -26,28 +24,42 @@ export default function PayslipDetailsDialog({
     showLinkStatus = true,
 }) {
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-            <DialogTitle>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-                    <Box>
-                        <Typography variant="h6" fontWeight={700}>
-                            {title}
-                        </Typography>
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+            <DialogTitle
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2,
+                    pb: 1,
+                }}
+            >
+                <Box>
+                    <Typography variant="h6" fontWeight={700}>
+                        {title}
+                    </Typography>
+                    {periodLabel && (
                         <Typography variant="caption" color="text.secondary">
                             {periodLabel}
                         </Typography>
-                    </Box>
-                    {showLinkStatus && (
-                        payslip?.is_linked ? (
+                    )}
+                </Box>
+
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    {showLinkStatus && payslip && (
+                        payslip.is_linked ? (
                             <Chip size="small" color="success" label="کاربر متصل" />
                         ) : (
                             <Chip size="small" label="بدون کاربر" />
                         )
                     )}
+                    <IconButton onClick={onClose} aria-label="بستن" disabled={loading}>
+                        <CloseIcon />
+                    </IconButton>
                 </Stack>
             </DialogTitle>
 
-            <DialogContent dividers>
+            <DialogContent dividers sx={{ bgcolor: '#eef1f5', p: { xs: 1, sm: 2 } }}>
                 {errors.length > 0 && (
                     <Alert severity="error" sx={{ mb: 2 }}>
                         <Box component="ul" sx={{ m: 0, pr: 2 }}>
@@ -59,46 +71,13 @@ export default function PayslipDetailsDialog({
                 )}
 
                 {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
                         <CircularProgress />
                     </Box>
                 ) : payslip ? (
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: { xs: 'flex-start', sm: 'center' },
-                                justifyContent: 'space-between',
-                                flexDirection: { xs: 'column', sm: 'row' },
-                                gap: 1,
-                                mb: 2,
-                            }}
-                        >
-                            <Box>
-                                <Typography variant="subtitle1" fontWeight={700}>
-                                    {payslip.display_name || payslip.employee_name || '—'}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                    کد پرسنلی: {toPersianDigits(payslip.national_code)}
-                                </Typography>
-                            </Box>
-                            {payslip.employee_name && payslip.display_name !== payslip.employee_name && (
-                                <Typography variant="caption" color="text.secondary">
-                                    نام در فایل: {payslip.employee_name}
-                                </Typography>
-                            )}
-                        </Box>
-
-                        <Divider sx={{ mb: 2 }} />
-
-                        <PayslipFieldsView data={payslip.data} />
-                    </>
+                    <PayslipDocument payslip={payslip} />
                 ) : null}
             </DialogContent>
-
-            <DialogActions>
-                <Button onClick={onClose}>بستن</Button>
-            </DialogActions>
         </Dialog>
     );
 }

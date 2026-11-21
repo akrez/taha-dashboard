@@ -17,70 +17,90 @@ use App\Http\Controllers\Api\VisitController;
 use App\Services\RbacService;
 use Illuminate\Support\Facades\Route;
 
+$permission = fn (PermissionEnum $permission): string => 'permission:'.$permission->name;
+$superAdmin = 'role:'.RbacService::superAdminRoleName();
+
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:api')->group(function () {
+
+Route::middleware('auth:api')->group(function () use ($permission, $superAdmin) {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::middleware(['permission:'.PermissionEnum::VisitIndex->name])->group(function () {
-        Route::get('/visits', [VisitController::class, 'index']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::Slide->name])->group(function () {
-        Route::get('/slides', [SlideController::class, 'index']);
-        Route::post('/slides', [SlideController::class, 'store']);
-        Route::put('/slides/{slide}', [SlideController::class, 'update']);
-        Route::delete('/slides/{slide}', [SlideController::class, 'destroy']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::Link->name])->group(function () {
-        Route::get('/links', [LinkController::class, 'index']);
-        Route::post('/links', [LinkController::class, 'store']);
-        Route::put('/links/{link}', [LinkController::class, 'update']);
-        Route::delete('/links/{link}', [LinkController::class, 'destroy']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::Employer->name])->group(function () {
-        Route::get('/employers', [EmployerController::class, 'index']);
-        Route::post('/employers', [EmployerController::class, 'store']);
-        Route::put('/employers/{employer}', [EmployerController::class, 'update']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::Project->name])->group(function () {
-        Route::get('/projects', [ProjectController::class, 'index']);
-        Route::get('/projects/options', [ProjectController::class, 'options']);
-        Route::get('/projects/{project}', [ProjectController::class, 'show']);
-        Route::post('/projects', [ProjectController::class, 'store']);
-        Route::put('/projects/{project}', [ProjectController::class, 'update']);
-        Route::patch('/projects/{project}/system-status', [ProjectController::class, 'updateSystemStatus']);
+    Route::get('/visits', [VisitController::class, 'index'])->middleware($permission(PermissionEnum::VisitIndex));
 
-        Route::get('/projects/{project}/addenda', [AddendumController::class, 'index']);
-        Route::post('/projects/{project}/addenda', [AddendumController::class, 'store']);
-        Route::put('/addenda/{addendum}', [AddendumController::class, 'update']);
-        Route::delete('/addenda/{addendum}', [AddendumController::class, 'destroy']);
+    Route::prefix('slides')->middleware($permission(PermissionEnum::Slide))->controller(SlideController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{slide}', 'update');
+        Route::delete('/{slide}', 'destroy');
     });
-    Route::middleware(['role:'.RbacService::superAdminRoleName()])->group(function () {
+
+    Route::prefix('links')->middleware($permission(PermissionEnum::Link))->controller(LinkController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{link}', 'update');
+        Route::delete('/{link}', 'destroy');
+    });
+
+    Route::prefix('employers')->middleware($permission(PermissionEnum::Employer))->controller(EmployerController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{employer}', 'update');
+    });
+
+    Route::middleware($permission(PermissionEnum::Project))->group(function () {
+        Route::controller(ProjectController::class)->group(function () {
+            Route::get('/projects', 'index');
+            Route::get('/projects/options', 'options');
+            Route::get('/projects/{project}', 'show');
+            Route::post('/projects', 'store');
+            Route::put('/projects/{project}', 'update');
+            Route::patch('/projects/{project}/system-status', 'updateSystemStatus');
+        });
+
+        Route::controller(AddendumController::class)->group(function () {
+            Route::get('/projects/{project}/addenda', 'index');
+            Route::post('/projects/{project}/addenda', 'store');
+            Route::put('/addenda/{addendum}', 'update');
+            Route::delete('/addenda/{addendum}', 'destroy');
+        });
+    });
+
+    Route::middleware($superAdmin)->group(function () {
         Route::post('/maintenance', MaintenanceController::class)->middleware('throttle:5,1');
-        Route::get('/roles', [RoleController::class, 'index']);
-        Route::get('/roles/permissions', [RoleController::class, 'permissions']);
-        Route::get('/roles/users', [RoleController::class, 'users']);
-        Route::post('/roles', [RoleController::class, 'create']);
-        Route::put('/roles/{role}', [RoleController::class, 'update']);
-        Route::put('/roles/{role}/permissions', [RoleController::class, 'syncPermissions']);
-        Route::put('/roles/{role}/users', [RoleController::class, 'syncUsers']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::UserManager->name])->group(function () {
-        Route::post('/users/import', [UserController::class, 'import']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::UserIndex->name])->group(function () {
-        Route::get('/users', [UserController::class, 'index']);
-        Route::get('/users/export', [UserController::class, 'export']);
-    });
-    Route::middleware(['permission:'.PermissionEnum::Payslip->name])->group(function () {
-        Route::get('/payslips/uploads', [PayslipUploadController::class, 'index']);
-        Route::post('/payslips/uploads', [PayslipUploadController::class, 'store']);
-        Route::get('/payslips/uploads/{upload}', [PayslipUploadController::class, 'show']);
-        Route::patch('/payslips/uploads/{upload}/status', [PayslipUploadController::class, 'updateStatus']);
-        Route::get('/payslips/uploads/{upload}/payslips/{payslip}', [PayslipUploadController::class, 'showPayslip']);
+
+        Route::prefix('roles')->controller(RoleController::class)->group(function () {
+            Route::get('/permissions', 'permissions');
+            Route::get('/users', 'users');
+            Route::get('/', 'index');
+            Route::post('/', 'create');
+            Route::put('/{role}', 'update');
+            Route::put('/{role}/permissions', 'syncPermissions');
+            Route::put('/{role}/users', 'syncUsers');
+        });
     });
 
-    // فیش حقوقی خود کارمند؛ برای همهٔ کاربران واردشده در دسترس است.
-    Route::get('/my-payslips', [MyPayslipController::class, 'index']);
-    Route::get('/my-payslips/{payslip}', [MyPayslipController::class, 'show']);
+    Route::prefix('users')->group(function () use ($permission) {
+        Route::post('/import', [UserController::class, 'import'])->middleware($permission(PermissionEnum::UserManager));
+
+        Route::middleware($permission(PermissionEnum::UserIndex))->group(function () {
+            Route::get('/', [UserController::class, 'index']);
+            Route::get('/export', [UserController::class, 'export']);
+        });
+    });
+
+    Route::prefix('payslips')->group(function () use ($permission) {
+        Route::middleware($permission(PermissionEnum::Payslip))->group(function () {
+            Route::get('/uploads', [PayslipUploadController::class, 'index']);
+            Route::post('/uploads', [PayslipUploadController::class, 'store']);
+            Route::get('/uploads/{upload}', [PayslipUploadController::class, 'show']);
+            Route::patch('/uploads/{upload}/status', [PayslipUploadController::class, 'updateStatus']);
+            Route::get('/uploads/{upload}/payslips/{payslip}', [PayslipUploadController::class, 'showPayslip']);
+        });
+
+        Route::prefix('mine')->controller(MyPayslipController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/{payslip}', 'show');
+        });
+    });
 });
 
 Route::get('/', [HomeController::class, 'index']);

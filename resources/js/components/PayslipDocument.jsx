@@ -1,5 +1,4 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { BadgeOutlined as BadgeIcon } from '@mui/icons-material';
 import { toPersianDigits } from '../jalali';
 import {
     PAYSLIP_DEDUCTION_FIELDS,
@@ -145,7 +144,7 @@ function InfoItem({ label, value }) {
 /**
  * نمای فیش حقوقی کارمند، برگرفته از چیدمان فرم رسمی فیش حقوقی.
  */
-export default function PayslipDocument({ payslip, periodLabel }) {
+export default function PayslipDocument({ payslip }) {
     const data = payslip?.data ?? {};
 
     const grossRaw = data['جمع مزایا'];
@@ -168,30 +167,6 @@ export default function PayslipDocument({ payslip, periodLabel }) {
                 color: '#1d2934',
             }}
         >
-            {/* سربرگ */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 2,
-                    px: { xs: 1.5, sm: 2 },
-                    py: { xs: 1.25, sm: 1.5 },
-                    bgcolor: '#fff',
-                    borderBottom: BORDER,
-                }}
-            >
-                <Stack direction="row" spacing={1} alignItems="center">
-                    <BadgeIcon sx={{ color: '#24384b' }} />
-                    <Typography variant="h6" fontWeight={700} sx={{ color: '#24384b' }}>
-                        فیش حقوقی
-                    </Typography>
-                </Stack>
-                <Typography variant="body2" fontWeight={600} sx={{ color: '#475569' }}>
-                    {periodLabel}
-                </Typography>
-            </Box>
-
             {/* اطلاعات کارمند */}
             <Box
                 sx={{
@@ -249,7 +224,7 @@ export default function PayslipDocument({ payslip, periodLabel }) {
             </Box>
 
             {/* جمع‌ها و خالص پرداختی */}
-            <Box sx={{ px: { xs: 1, sm: 1.25 }, pb: { xs: 1, sm: 1.25 } }}>
+            <Box sx={{ px: { xs: 1, sm: 1.25 }, pt: { xs: 1, sm: 1.25 }, pb: { xs: 1, sm: 1.25 } }}>
                 <Box
                     sx={{
                         display: 'grid',
@@ -323,7 +298,7 @@ export default function PayslipDocument({ payslip, periodLabel }) {
                         color: '#fff',
                     }}
                 >
-                    <Stack direction="row" spacing={1.5} alignItems="center">
+                    <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
                         <Typography variant="subtitle1" fontWeight={700}>
                             خالص پرداختی
                         </Typography>

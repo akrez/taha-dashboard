@@ -16,8 +16,9 @@ class MyPayslipSummaryResource extends JsonResource
             'id' => $this->id,
             'year' => $this->upload?->year,
             'month' => $this->upload?->month,
-            'net_pay' => $this->data['خالص پرداختی'] ?? '',
-            'uploaded_at' => $this->created_at?->toIso8601String(),
+            'position' => $this->user?->position?->name,
+            'group' => $this->data['گروه'] ?? '',
+            'workplace' => $this->data['محل خدمت'] ?? '',
         ];
     }
 }
