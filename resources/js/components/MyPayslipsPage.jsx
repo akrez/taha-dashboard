@@ -15,7 +15,7 @@ import {
 import { ReceiptLong as ReceiptIcon } from '@mui/icons-material';
 import { formatJalaliDateTime, formatJalaliPeriod, toPersianDigits } from '../jalali';
 import { formatPayslipValue } from '../payslipFields';
-import PayslipDetailsDialog from './PayslipDetailsDialog';
+import MyPayslipDialog from './MyPayslipDialog';
 
 const NET_PAY_FIELD = { money: true };
 
@@ -200,15 +200,13 @@ export default function MyPayslipsPage() {
                 )}
             </CardContent>
 
-            <PayslipDetailsDialog
+            <MyPayslipDialog
                 open={detailOpen}
                 onClose={closePayslip}
                 payslip={detailPayslip}
                 loading={detailLoading}
                 errors={detailErrors}
                 periodLabel={detailPeriod}
-                title="فیش حقوقی من"
-                showLinkStatus={false}
             />
         </Card>
     );
