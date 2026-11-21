@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\EmployerController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LinkController;
 use App\Http\Controllers\Api\MaintenanceController;
+use App\Http\Controllers\Api\MyPayslipController;
+use App\Http\Controllers\Api\PayslipUploadController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SlideController;
@@ -68,6 +70,17 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/users', [UserController::class, 'index']);
         Route::get('/users/export', [UserController::class, 'export']);
     });
+    Route::middleware(['permission:'.PermissionEnum::Payslip->name])->group(function () {
+        Route::get('/payslips/uploads', [PayslipUploadController::class, 'index']);
+        Route::post('/payslips/uploads', [PayslipUploadController::class, 'store']);
+        Route::get('/payslips/uploads/{upload}', [PayslipUploadController::class, 'show']);
+        Route::patch('/payslips/uploads/{upload}/status', [PayslipUploadController::class, 'updateStatus']);
+        Route::get('/payslips/uploads/{upload}/payslips/{payslip}', [PayslipUploadController::class, 'showPayslip']);
+    });
+
+    // فیش حقوقی خود کارمند؛ برای همهٔ کاربران واردشده در دسترس است.
+    Route::get('/my-payslips', [MyPayslipController::class, 'index']);
+    Route::get('/my-payslips/{payslip}', [MyPayslipController::class, 'show']);
 });
 
 Route::get('/', [HomeController::class, 'index']);

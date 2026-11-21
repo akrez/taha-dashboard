@@ -4,6 +4,9 @@ import EmployersTable from './components/EmployersTable';
 import { RequireAnyPermission, RequireAuth, RequirePermission, RequireSuperAdmin } from './components/Guards';
 import HomeIndex from './components/HomeIndex';
 import LinksTable from './components/LinksTable';
+import MyPayslipsPage from './components/MyPayslipsPage';
+import PayslipUploadPage from './components/PayslipUploadPage';
+import PayslipsTable from './components/PayslipsTable';
 import ProjectAddendaPage from './components/ProjectAddendaPage';
 import ProjectFormPage from './components/ProjectFormPage';
 import ProjectsTable from './components/ProjectsTable';
@@ -119,6 +122,34 @@ export default function AppRoutes() {
                                 <RequireSuperAdmin>
                                     <RolesTable />
                                 </RequireSuperAdmin>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="payslips"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Payslip">
+                                    <PayslipsTable />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="payslips/:id"
+                        element={
+                            <RequireAuth>
+                                <RequirePermission permission="Payslip">
+                                    <PayslipUploadPage />
+                                </RequirePermission>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="my-payslips"
+                        element={
+                            <RequireAuth>
+                                <MyPayslipsPage />
                             </RequireAuth>
                         }
                     />

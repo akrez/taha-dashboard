@@ -32,6 +32,8 @@ import {
     Link as LinkIcon,
     Login as LoginIcon,
     LogoutOutlined,
+    Receipt as MyPayslipIcon,
+    ReceiptLong as PayslipIcon,
     Security as RolesIcon,
     Slideshow as SlideshowIcon,
     People as UsersIcon,
@@ -39,7 +41,7 @@ import {
 } from '@mui/icons-material';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
-import { can, getUser, hasRole, isSuperAdmin, logout } from '../auth';
+import { can, getUser, hasRole, isAuthenticated, isSuperAdmin, logout } from '../auth';
 import Footer from './Footer';
 import LoginModal from './LoginModal';
 
@@ -51,6 +53,8 @@ const navItems = [
     { key: 'employers', label: 'کارفرمایان', path: '/employers', icon: <EmployerIcon />, permission: 'Employer' },
     { key: 'projects', label: 'پروژه‌ها', path: '/projects', icon: <ProjectsIcon />, permission: 'Project' },
     { key: 'users', label: 'کاربران', path: '/users', icon: <UsersIcon />, permissions: ['UserManager', 'UserIndex'] },
+    { key: 'payslips', label: 'فیش‌های حقوقی', path: '/payslips', icon: <PayslipIcon />, permission: 'Payslip' },
+    { key: 'my-payslips', label: 'فیش حقوقی من', path: '/my-payslips', icon: <MyPayslipIcon />, authOnly: true },
     { key: 'roles', label: 'نقش‌ها', path: '/roles', icon: <RolesIcon />, superAdmin: true },
 ];
 
@@ -170,6 +174,10 @@ export default function HomeIndex() {
     const userRoleInfo = [user?.position?.name, user?.project?.project_name].filter(Boolean).join(' - ');
 
     const visibleNavItems = navItems.filter((item) => {
+        if (item.authOnly && !isAuthenticated()) {
+            return false;
+        }
+
         if (item.superAdmin && !isSuperAdmin()) {
             return false;
         }

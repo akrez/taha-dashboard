@@ -13,4 +13,5 @@ enum PermissionEnum
     case Project;
     case UserIndex;
     case UserManager;
+    case Payslip;
 }
